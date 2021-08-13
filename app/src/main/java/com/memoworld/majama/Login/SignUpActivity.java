@@ -1,9 +1,10 @@
-package com.memoworld.majama;
+package com.memoworld.majama.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.memoworld.majama.R;
 import com.memoworld.majama.databinding.ActivitySignUpBinding;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -16,6 +17,8 @@ public class SignUpActivity extends AppCompatActivity {
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setContentView(R.layout.activity_sign_up);
-
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
     }
 }

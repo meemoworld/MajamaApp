@@ -1,4 +1,4 @@
-package com.memoworld.majama;
+package com.memoworld.majama.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.memoworld.majama.R;
 import com.memoworld.majama.databinding.ActivityLoginBinding;
-import com.memoworld.majama.databinding.ActivitySignUpBinding;
 
 public class login extends AppCompatActivity {
 
@@ -32,6 +32,10 @@ public class login extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setContentView(R.layout.activity_login);
+
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
 
         loginBtn = findViewById(R.id.login);
 
