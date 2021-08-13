@@ -1,4 +1,4 @@
-package com.memoworld.majama;
+package com.memoworld.majama.Login;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.memoworld.majama.R;
 
 public class SplashActivity extends AppCompatActivity {
 
