@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@color/white"
     tools:context=".login">
 
 
@@ -83,8 +82,8 @@
             android:layout_marginBottom="5dp"
             android:backgroundTint="@color/black"
             android:text="Login"
-            android:transitionName="login_trans"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:transitionName="login_trans" />
 
         <Button
             android:id="@+id/newUser"
@@ -94,7 +93,7 @@
             android:background="#00000000"
             android:text="New User ? SIGN UP"
             android:textColor="@color/black"
-            android:transitionName="sign_trans"/>
+            android:transitionName="sign_trans" />
 
     </LinearLayout>
 </LinearLayout>

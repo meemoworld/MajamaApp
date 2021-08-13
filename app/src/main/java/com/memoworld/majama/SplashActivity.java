@@ -55,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this,pairs);
                 startActivity(intent , options.toBundle());
+                finish();
             }
         }, 3000);
 

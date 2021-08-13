@@ -34,11 +34,14 @@ public class login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginBtn = findViewById(R.id.login);
+
         signup = findViewById(R.id.newUser);
-        logo = findViewById(R.id.logo);
+        logo = findViewById(R.id.logoImage);
+
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        name = findViewById(R.id.name);
+
+        name = findViewById(R.id.logoName);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
