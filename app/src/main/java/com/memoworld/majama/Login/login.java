@@ -36,16 +36,7 @@ public class login extends AppCompatActivity {
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
         }
-
-        loginBtn = findViewById(R.id.login);
-
-        signup = findViewById(R.id.newUser);
-        logo = findViewById(R.id.logoImage);
-
-        email = findViewById(R.id.userEmail);
-        password = findViewById(R.id.password);
-
-        name = findViewById(R.id.logoName);
+        initialize();
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,5 +57,17 @@ public class login extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initialize() {
+        loginBtn = findViewById(R.id.login);
+
+        signup = findViewById(R.id.newUser);
+        logo = findViewById(R.id.logoImage);
+
+        email = findViewById(R.id.userEmail);
+        password = findViewById(R.id.password);
+
+        name = findViewById(R.id.logoName);
     }
 }
