@@ -38,7 +38,7 @@ public static final String TAG="TAG";
         if(getFragmentManager()==null){
             Log.i(TAG, "onCreateView: NULL found");
         }
-        adapter=new SuggestionsAdapter(getActivity().getSupportFragmentManager(),getLifecycle());
+        adapter=new SuggestionsAdapter(getChildFragmentManager(),getLifecycle());
         viewPager2.setAdapter(adapter);
 tabLayout.addTab(tabLayout.newTab().setText("Movies"));
         tabLayout.addTab(tabLayout.newTab().setText("Date"));
