@@ -10,15 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Majama">
         <activity android:name=".User.Interest">
+
+        </activity>
+        <activity android:name=".Login.SignUpActivity" />
+        <activity android:name=".Login.login" />
+        <activity android:name=".Login.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login.SignUpActivity" />
-        <activity android:name=".Login.login" />
-        <activity android:name=".Login.SplashActivity"></activity>
         <activity android:name=".MainActivity">
 
         </activity>

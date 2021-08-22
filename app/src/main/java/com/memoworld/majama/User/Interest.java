@@ -109,7 +109,6 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
                 if (documentSnapshot.exists()) {
                     tag = documentSnapshot.toObject(Tag.class);
                     if (tag != null) {
-                        interestAdapter = new InterestAdapter(Interest.this, tag.getTagArray());
                         tags = tag.getTagArray();
                         recyclerView.setAdapter(interestAdapter);
                     }
