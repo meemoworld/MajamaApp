@@ -41,7 +41,7 @@ public static final String TAG="TAG";
         adapter=new SuggestionsAdapter(getChildFragmentManager(),getLifecycle());
         viewPager2.setAdapter(adapter);
 tabLayout.addTab(tabLayout.newTab().setText("Movies"));
-        tabLayout.addTab(tabLayout.newTab().setText("Date"));
+        tabLayout.addTab(tabLayout.newTab().setText("People Around"));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -50,7 +50,6 @@ tabLayout.addTab(tabLayout.newTab().setText("Movies"));
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
