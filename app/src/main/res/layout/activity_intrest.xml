@@ -1,60 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".User.Interest">
 
-    <TextView
-        android:id="@+id/heading"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select Interest"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="35sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/interest_chip_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/heading"
-        android:layout_margin="5dp">
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Interest"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="35sp"
+            android:textStyle="bold" />
 
-    </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/interest_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/heading"
+            android:layout_margin="5dp">
 
-    <EditText
-        android:id="@+id/edit_text_search_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/interest_chip_group"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/text_box_bg"
-        android:drawableStart="@drawable/ic_baseline_search_24"
-        android:drawablePadding="2dp"
-        android:ems="10"
-        android:hint="@string/enter_tag_to_search"
-        android:inputType="textPersonName" />
+        </com.google.android.material.chip.ChipGroup>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/interestRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_text_search_tag"
-        android:layout_margin="5dp"
-        tools:listitem="@layout/interest_single_item_layout" />
+        <EditText
+            android:id="@+id/edit_text_search_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/interest_chip_group"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/text_box_bg"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="2dp"
+            android:ems="10"
+            android:hint="@string/enter_tag_to_search"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:text="Continue"
-        android:onClick="Continue"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/interestRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_text_search_tag"
+            android:layout_margin="5dp"
+            tools:listitem="@layout/interest_single_item_layout" />
 
-</RelativeLayout>
+        <Button
+            android:layout_below="@+id/interestRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="3dp"
+            android:onClick="Continue"
+            android:text="Continue" />
+
+    </RelativeLayout>
+</ScrollView>
