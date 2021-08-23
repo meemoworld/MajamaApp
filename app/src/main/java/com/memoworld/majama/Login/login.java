@@ -3,7 +3,6 @@ package com.memoworld.majama.Login;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,6 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -26,8 +28,6 @@ import com.memoworld.majama.AllModals.UserNameDetails;
 import com.memoworld.majama.R;
 import com.memoworld.majama.databinding.ActivityLoginBinding;
 
-import java.util.ArrayList;
-
 public class login extends AppCompatActivity {
 
     ActivityLoginBinding binding;
@@ -35,10 +35,11 @@ public class login extends AppCompatActivity {
     ImageView logo;
     TextInputLayout username, password;
     TextView appName;
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String nameOfUser, passwordOfUser;
     private final FirebaseFirestore ff = FirebaseFirestore.getInstance();
     public static final String TAG = "MAJAMA";
+    private GoogleSignInClient mGoogleSignInClient;
 
     private UserNameDetails usernameDetails;
 
@@ -87,7 +88,13 @@ public class login extends AppCompatActivity {
         password = findViewById(R.id.password_text_input_login);
         forgot = findViewById(R.id.btn_forgot_password);
         appName = findViewById(R.id.logoName);
-        usernameDetails=new UserNameDetails();
+        usernameDetails = new UserNameDetails();
+// Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     public void ForgotPassword(View view) {
@@ -108,18 +115,20 @@ public class login extends AppCompatActivity {
             ff.collection("UserNameDetails").document(nameOfUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful() && task.getResult()!=null){
-                        usernameDetails=task.getResult().toObject(UserNameDetails.class);
-                        if(usernameDetails!=null && passwordOfUser.equals(usernameDetails.getPassword())){
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        usernameDetails = task.getResult().toObject(UserNameDetails.class);
+                        if (usernameDetails != null) {
+                            if (passwordOfUser.equals(usernameDetails.getPassword())) {
+                                // TODO : Sign in With google with given Email
 
-                            // TODO : Sign in With google with given Email
-                        }
-                        else{
-                            ShowError(password,"Please Check Your Password");
-                        }
-                    }
-                    else{
-                        ShowError(username, "Please Check Your Unique Id");
+                            } else
+                                ShowError(password, "Please Check Your Password");
+
+                        } else
+                            ShowError(username, "Please Check Your Unique Id");
+                    } else {
+                        Toast.makeText(login.this, "Error : " + task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
+//                        ShowError(username, "Please Check Your Unique Id");
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
