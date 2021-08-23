@@ -1,27 +1,23 @@
 package com.memoworld.majama.AllModals;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class UserNameDetails {
-   private String email;
-   private String password;
+    private String UID;
+    private String password;
 
     public UserNameDetails() {
     }
 
-    public UserNameDetails(String email, String password) {
-        this.email = email;
+    public UserNameDetails(String UID, String password) {
+        this.UID = UID;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUID() {
+        return UID;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUID(String UID) {
+        this.UID = UID;
     }
 
     public String getPassword() {
