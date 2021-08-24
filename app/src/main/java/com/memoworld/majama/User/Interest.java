@@ -45,6 +45,9 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
 //        if(getSupportActionBar()!=null){
 //            getSupportActionBar().hide();
 //        }
+
+        getSupportActionBar().hide();
+
         userInterest = new ArrayList<>();
         recyclerView = findViewById(R.id.interestRecyclerView);
         userInput = findViewById(R.id.edit_text_search_tag);
