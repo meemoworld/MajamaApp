@@ -1,7 +1,6 @@
 package com.memoworld.majama.User;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,10 +50,13 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyView
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView interestTagText;
+        private TextView interestTagText ,interestTagText1, interestTagText2;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             interestTagText=itemView.findViewById(R.id.name_text_box_singleItem);
+            interestTagText1=itemView.findViewById(R.id.name_text_box_singleItem1);
+            interestTagText2=itemView.findViewById(R.id.name_text_box_singleItem2);
+
 
         }
     }

@@ -33,12 +33,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/interest_chip_group"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
             android:background="@drawable/text_box_bg"
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:drawablePadding="2dp"
             android:ems="10"
             android:hint="@string/enter_tag_to_search"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:padding="4dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/interestRecyclerView"

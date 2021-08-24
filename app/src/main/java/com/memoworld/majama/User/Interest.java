@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,7 +50,7 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
         userInput = findViewById(R.id.edit_text_search_tag);
         chipGroup = findViewById(R.id.interest_chip_group);
         tags = new ArrayList<>();
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 5));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         getContacts();
         userInput.addTextChangedListener(new TextWatcher() {
@@ -110,6 +111,7 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
                     tag = documentSnapshot.toObject(Tag.class);
                     if (tag != null) {
                         tags = tag.getTagArray();
+                        interestAdapter = new InterestAdapter(Interest.this, tags);
                         recyclerView.setAdapter(interestAdapter);
                     }
                 }
