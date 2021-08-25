@@ -48,6 +48,7 @@
         app:cornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:onClick="signIn1"
         app:layout_constraintTop_toBottomOf="@+id/logoName" />
 
     <pl.droidsonroids.gif.GifImageView

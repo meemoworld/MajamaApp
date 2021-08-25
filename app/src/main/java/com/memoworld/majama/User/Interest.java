@@ -1,7 +1,5 @@
 package com.memoworld.majama.User;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,23 +7,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.database.collection.LLRBNode;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.memoworld.majama.AllModals.EachTag;
 import com.memoworld.majama.AllModals.Tag;
 import com.memoworld.majama.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Interest extends AppCompatActivity implements InterestTagItemListener, View.OnClickListener {
     private RecyclerView recyclerView;
@@ -36,23 +34,23 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     private Tag tag = new Tag();
+    private ArrayList<EachTag> tagArrayList = new ArrayList<>();
     private List<String> userInterest;
+    private ArrayList<HashMap<String, String>> hashMapArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intrest);
-//        if(getSupportActionBar()!=null){
-//            getSupportActionBar().hide();
-//        }
 
-        getSupportActionBar().hide();
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
 
         userInterest = new ArrayList<>();
         recyclerView = findViewById(R.id.interestRecyclerView);
         userInput = findViewById(R.id.edit_text_search_tag);
         chipGroup = findViewById(R.id.interest_chip_group);
-        tags = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         getContacts();
@@ -64,9 +62,9 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String userString = s.toString();
-                List<String> newTags = new ArrayList<>();
-                for (String allTags : tags) {
-                    if (allTags.contains(userString)) {
+                List<EachTag> newTags = new ArrayList<>();
+                for (EachTag allTags : tagArrayList) {
+                    if (allTags.getTagName().contains(userString)) {
                         newTags.add(allTags);
                     }
                 }
@@ -107,14 +105,20 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
 
     public void getContacts() {
 
-        firebaseFirestore.collection("Tags").document("tags").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Tag").document("tag").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     tag = documentSnapshot.toObject(Tag.class);
                     if (tag != null) {
-                        tags = tag.getTagArray();
-                        interestAdapter = new InterestAdapter(Interest.this, tags);
+                        hashMapArrayList = tag.getTagmap();
+                        for (int i = 0; i < hashMapArrayList.size(); i++) {
+                            HashMap<String, String> tempMap = hashMapArrayList.get(i);
+                            for (Map.Entry<String, String> entry : tempMap.entrySet()) {
+                                tagArrayList.add(new EachTag(entry.getKey(), entry.getValue()));
+                            }
+                        }
+                        interestAdapter = new InterestAdapter(Interest.this, tagArrayList);
                         recyclerView.setAdapter(interestAdapter);
                     }
                 }
@@ -129,7 +133,7 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
         userInterest.remove(chip.getText().toString());
     }
 
-    public void Continue(View View){
+    public void Continue(View View) {
         // TODO: This is to be completed
         Toast.makeText(this, "To complete", Toast.LENGTH_SHORT).show();
     }

@@ -126,7 +126,6 @@ public class login extends AppCompatActivity {
                         if (usernameDetails != null) {
                             if (passwordOfUser.equals(usernameDetails.getPassword())) {
                                 // TODO : Sign in With google with given Email
-
                             } else
                                 ShowError(password, "Please Check Your Password");
 
