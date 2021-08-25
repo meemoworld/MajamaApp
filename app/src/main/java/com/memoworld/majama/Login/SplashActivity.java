@@ -49,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, login.class);
+                Intent intent = new Intent(SplashActivity.this, NewLogin.class);
 
                 Pair[] pairs  = new Pair[2];
                 pairs[0] = new Pair<View,String>(logo,"logo_image");
