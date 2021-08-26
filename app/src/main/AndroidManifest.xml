@@ -9,21 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Majama">
-        <activity android:name=".Login.NewLogin">
+        <activity android:name=".Account_Details">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".User.Interest">
+        <activity android:name=".Login.NewLogin">
 
         </activity>
+        <activity android:name=".User.Interest"></activity>
         <activity android:name=".Login.SignUpActivity" />
         <activity android:name=".Login.login" />
-        <activity android:name=".Login.SplashActivity">
-
-        </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".Login.SplashActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

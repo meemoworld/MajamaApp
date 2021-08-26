@@ -62,4 +62,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     //Gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
+
+    //Circular Image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }
