@@ -1,12 +1,14 @@
 package com.memoworld.majama.User;
 
 import android.app.Dialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -30,6 +32,20 @@ public class Account_Details extends AppCompatActivity {
     TextInputLayout inputFirstName, inputLastName, inputAge, inputGender, inputAbout, inputCity;
     ArrayList<String> listAll = new ArrayList<String>();
 
+
+//    Gender Dropdown function
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        String[] gender = new String[]{"Male", "Female" , "Others"};
+
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.gender_dropdown , gender);
+
+        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteText);
+        autoCompleteTextView.setAdapter(adapter);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +56,10 @@ public class Account_Details extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
+
+
+
+
         initialize();
         
         inputCity.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -47,7 +67,7 @@ public class Account_Details extends AppCompatActivity {
             public void onClick(View v) {
                 dialog = new Dialog(Account_Details.this);
                 dialog.setContentView(R.layout.dialog_searchable_city);
-                dialog.getWindow().setLayout(650, 800);
+                dialog.getWindow().setLayout(850, 1000);
 //                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
                 EditText editText = dialog.findViewById(R.id.editText_city_search);
