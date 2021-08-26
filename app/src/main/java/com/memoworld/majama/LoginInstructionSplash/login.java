@@ -1,4 +1,4 @@
-package com.memoworld.majama.Login;
+package com.memoworld.majama.LoginInstructionSplash;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -37,9 +37,6 @@ public class login extends AppCompatActivity {
     private final FirebaseFirestore ff = FirebaseFirestore.getInstance();
     public static final String TAG = "MAJAMA";
     private GoogleSignInClient mGoogleSignInClient;
-
-    private UserNameDetails usernameDetails;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +73,7 @@ public class login extends AppCompatActivity {
     }
 
     private void initialize() {
-        loginBtn = findViewById(R.id.btn_login);
+        loginBtn = findViewById(R.id.btn_continue_details);
 
         signup = findViewById(R.id.btn_new_user);
         logo = findViewById(R.id.logoImage);
@@ -85,7 +82,6 @@ public class login extends AppCompatActivity {
         password = findViewById(R.id.password_text_input_login);
         forgot = findViewById(R.id.btn_forgot_password);
         appName = findViewById(R.id.logoName);
-        usernameDetails = new UserNameDetails();
 // Configure Google Sign In
 //        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 //                .requestIdToken(getString(R.string.default_web_client_id))
@@ -113,15 +109,15 @@ public class login extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        usernameDetails = task.getResult().toObject(UserNameDetails.class);
-                        if (usernameDetails != null) {
-                            if (passwordOfUser.equals(usernameDetails.getPassword())) {
-                                // TODO : Sign in With google with given Email
-                            } else
-                                ShowError(password, "Please Check Your Password");
+//                        usernameDetails = task.getResult().toObject(UserNameDetails.class);
+//                        if (usernameDetails != null) {
+//                            if (passwordOfUser.equals(usernameDetails.getPassword())) {
+//                                // TODO : Sign in With google with given Email
+//                            } else
+//                                ShowError(password, "Please Check Your Password");
 
-                        } else
-                            ShowError(username, "Please Check Your Unique Id");
+//                        } else
+//                            ShowError(username, "Please Check Your Unique Id");
                     } else {
                         Toast.makeText(login.this, "Error : " + task.getException().getMessage().toString(), Toast.LENGTH_SHORT).show();
 //                        ShowError(username, "Please Check Your Unique Id");

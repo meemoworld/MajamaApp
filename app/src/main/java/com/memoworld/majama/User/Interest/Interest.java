@@ -1,4 +1,4 @@
-package com.memoworld.majama.User;
+package com.memoworld.majama.User.Interest;
 
 import android.os.Bundle;
 import android.text.Editable;

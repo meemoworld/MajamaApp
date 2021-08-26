@@ -1,4 +1,4 @@
-package com.memoworld.majama.User;
+package com.memoworld.majama.User.Interest;
 
 import android.content.Context;
 import android.view.LayoutInflater;

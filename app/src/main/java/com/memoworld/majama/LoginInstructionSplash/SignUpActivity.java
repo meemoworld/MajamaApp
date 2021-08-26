@@ -1,4 +1,4 @@
-package com.memoworld.majama.Login;
+package com.memoworld.majama.LoginInstructionSplash;
 
 import androidx.appcompat.app.AppCompatActivity;
 

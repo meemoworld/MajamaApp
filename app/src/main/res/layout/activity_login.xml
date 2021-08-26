@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
-        tools:context=".Login.login">
+        tools:context=".LoginInstructionSplash.login">
 
 
         <ImageView
@@ -82,7 +82,7 @@
                 android:onClick="ForgotPassword"/>
 
             <Button
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_continue_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
