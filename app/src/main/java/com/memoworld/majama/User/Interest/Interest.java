@@ -28,7 +28,6 @@ import java.util.Map;
 public class Interest extends AppCompatActivity implements InterestTagItemListener, View.OnClickListener {
     private RecyclerView recyclerView;
     private InterestAdapter interestAdapter;
-    private List<String> tags;
     private ChipGroup chipGroup;
     private EditText userInput;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -36,7 +35,7 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
     private Tag tag = new Tag();
     private ArrayList<EachTag> tagArrayList = new ArrayList<>();
     private List<String> userInterest;
-    private ArrayList<HashMap<String, String>> hashMapArrayList;
+    private HashMap<String, String> hashMapList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,20 +103,16 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
     }
 
     public void getContacts() {
-
         firebaseFirestore.collection("Tag").document("tag").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     tag = documentSnapshot.toObject(Tag.class);
                     if (tag != null) {
-                        hashMapArrayList = tag.getTagmap();
-                        for (int i = 0; i < hashMapArrayList.size(); i++) {
-                            HashMap<String, String> tempMap = hashMapArrayList.get(i);
-                            for (Map.Entry<String, String> entry : tempMap.entrySet()) {
+                        hashMapList = tag.getTagmap();
+                            for (Map.Entry<String, String> entry : hashMapList.entrySet()) {
                                 tagArrayList.add(new EachTag(entry.getKey(), entry.getValue()));
                             }
-                        }
                         interestAdapter = new InterestAdapter(Interest.this, tagArrayList);
                         recyclerView.setAdapter(interestAdapter);
                     }

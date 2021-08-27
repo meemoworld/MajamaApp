@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 public class Tag {
-    private ArrayList<HashMap<String,String>> tagmap=new ArrayList<>() ;
+    private HashMap<String,String> tagmap=new HashMap<>() ;
 
-    public Tag(ArrayList<HashMap<String, String>> tagmap) {
+    public Tag(HashMap<String, String> tagmap) {
         this.tagmap = tagmap;
     }
 
-    public ArrayList<HashMap<String, String>> getTagmap() {
+    public HashMap<String, String> getTagmap() {
         return tagmap;
     }
 
-    public void setTagmap(ArrayList<HashMap<String, String>> tagmap) {
+    public void setTagmap(HashMap<String, String> tagmap) {
         this.tagmap = tagmap;
     }
 
