@@ -1,6 +1,7 @@
 package com.memoworld.majama.User.Interest;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,13 @@ import com.memoworld.majama.R;
 
 import java.util.List;
 
+import static com.memoworld.majama.MainActivityFragments.Suggestion.TAG;
+
 public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyViewHolder> {
 
     private final Context context;
     private final List<EachTag> tags;
     private final InterestTagItemListener interestTagItemListener;
-    private static int index = 0;
 
     public InterestAdapter(Context context, List<EachTag> tags) {
         this.context = context;
@@ -39,40 +41,59 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        int currentIndex=index;
-        holder.interestTagText.setText(tags.get(currentIndex).getTagName());
-        Glide.with(context).load(tags.get(index).getImageUrl()).into(holder.imageView);
-
-        holder.interestTagText1.setText(tags.get(currentIndex + 1).getTagName());
-        Glide.with(context).load(tags.get(index + 1).getImageUrl()).into(holder.imageView1);
-
-        holder.interestTagText2.setText(tags.get(currentIndex + 2).getTagName());
-        Glide.with(context).load(tags.get(index + 2).getImageUrl()).into(holder.imageView2);
-
+        int index=position*3;
+        if(index<tags.size()) {
+            holder.interestTagText.setText(tags.get(index).getTagName());
+            Glide.with(context).load(tags.get(index).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
+        }else{
+            holder.imageView.setVisibility(View.GONE);
+            holder.interestTagText.setVisibility(View.GONE);
+            holder.layout1.setClickable(false);
+        }
+//        Log.i(TAG, "onBindViewHolder: after 1 : "+index);
+        if(index+1<tags.size()) {
+            holder.interestTagText1.setText(tags.get(index + 1).getTagName());
+            Glide.with(context).load(tags.get(index + 1).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView1);
+        }
+        else{
+            holder.imageView1.setVisibility(View.GONE);
+            holder.interestTagText1.setVisibility(View.GONE);
+            holder.layout2.setClickable(false);
+        }
+//        Log.i(TAG, "onBindViewHolder:  after 2: "+index);
+        if(index+2<tags.size())
+        {
+            holder.interestTagText2.setText(tags.get(index + 2).getTagName());
+            Glide.with(context).load(tags.get(index + 2).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView2);
+        }
+        else{
+            holder.imageView2.setVisibility(View.GONE);
+            holder.interestTagText2.setVisibility(View.GONE);
+            holder.layout3.setClickable(false);
+        }
         holder.layout1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interestTagItemListener.onItemSelected(tags.get(currentIndex).getTagName());
+                interestTagItemListener.onItemSelected(tags.get(index).getTagName());
             }
         });
         holder.layout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interestTagItemListener.onItemSelected(tags.get(currentIndex + 1).getTagName());
+                interestTagItemListener.onItemSelected(tags.get(index + 1).getTagName());
             }
         });
         holder.layout3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interestTagItemListener.onItemSelected(tags.get(currentIndex + 2).getTagName());
+                interestTagItemListener.onItemSelected(tags.get(index + 2).getTagName());
             }
         });
-        index+=3;
     }
 
     @Override
     public int getItemCount() {
-        return tags.size()/3;
+        return tags.size()/3+1;
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
