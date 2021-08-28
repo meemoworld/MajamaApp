@@ -258,6 +258,16 @@ public class Account_Details extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     userImageUrl = uri.toString();
+
+                                    Map<String, Object> personalInfo = new HashMap<>();
+                                    personalInfo.put("About", userAbout);
+                                    personalInfo.put("firstName", userFirstName);
+                                    personalInfo.put("lastName", userLastName);
+                                    personalInfo.put("profileImageUrl", null);
+                                    personalInfo.put("userCity", userCity);
+                                    personalInfo.put("userAge", userAge);
+                                    personalInfo.put("username", null);
+                                    personalInfo.put("",null);
                                 }
                             });
                         }
@@ -265,14 +275,7 @@ public class Account_Details extends AppCompatActivity {
                 });
 
 
-        Map<String, Object> personalInfo = new HashMap<>();
-        personalInfo.put("About", userAbout);
-        personalInfo.put("firstName", userFirstName);
-        personalInfo.put("lastName", userLastName);
-        personalInfo.put("profileImageUrl", null);
-        personalInfo.put("userCity", userCity);
-        personalInfo.put("userAge", userAge);
-        personalInfo.put("username", null);
+
 
     }
 

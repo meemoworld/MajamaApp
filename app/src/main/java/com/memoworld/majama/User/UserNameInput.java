@@ -39,6 +39,8 @@ public class UserNameInput extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_name_input);
 
+        getSupportActionBar().hide();
+
         inputUserName=findViewById(R.id.input_username);
         btnDatePicker=findViewById(R.id.btn_date_pick);
         save=findViewById(R.id.save_username_birthday);
