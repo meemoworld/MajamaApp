@@ -16,13 +16,13 @@
         <activity android:name=".User.UserNameInput">
 
         </activity>
-        <activity android:name=".User.Account_Details">
+        <activity android:name=".User.Account_Details"/>
+        <activity android:name=".User.ProfileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".LoginInstructionSplash.NewLogin" />
         <activity android:name=".User.Interest.Interest"/>
