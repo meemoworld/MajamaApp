@@ -1,8 +1,11 @@
 package com.memoworld.majama.User;
 
 import android.app.Dialog;
-import android.content.res.Resources;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,11 +14,26 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.memoworld.majama.LoginInstructionSplash.NewLogin;
+import com.memoworld.majama.LoginInstructionSplash.login;
 import com.memoworld.majama.R;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,22 +43,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Account_Details extends AppCompatActivity {
 
+
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("UserImages").child("ProfileImages");
+    ProgressDialog progressDialog;
+    String userId;
     Dialog dialog;
     TextInputLayout inputFirstName, inputLastName, inputAge, inputGender, inputAbout, inputCity;
     ArrayList<String> listAll = new ArrayList<String>();
+    MaterialButton button;
+    Uri imageuri;
+    CircleImageView userImage;
+    String userFirstName, userLastName, userAge, userCity, userGender, userAbout, userImageUrl;
 
-
-//    Gender Dropdown function
+    //    Gender Dropdown function
     @Override
     protected void onPostResume() {
         super.onPostResume();
 
-        String[] gender = new String[]{"Male", "Female" , "Others"};
+        String[] gender = new String[]{"Male", "Female", "Others"};
 
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.gender_dropdown , gender);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.gender_dropdown, gender);
 
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteText);
         autoCompleteTextView.setAdapter(adapter);
@@ -52,16 +81,14 @@ public class Account_Details extends AppCompatActivity {
         setContentView(R.layout.activity_account_details);
 
         obj_list();
+        progressDialog = new ProgressDialog(this);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
 
-
-
-
         initialize();
-        
+
         inputCity.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,5 +179,114 @@ public class Account_Details extends AppCompatActivity {
         inputAge = findViewById(R.id.input_age_details);
         inputCity = findViewById(R.id.input_city_details);
         inputGender = findViewById(R.id.input_gender_details);
+        button = findViewById(R.id.btn_continue_details);
+        userImage = findViewById(R.id.profile_image_details);
+    }
+
+    public void SelectImage(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 101);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
+            imageuri = data.getData();
+            CropImage.activity(imageuri)
+                    .setCropShape(CropImageView.CropShape.RECTANGLE)
+                    .setAspectRatio(1, 1)
+                    .setMaxCropResultSize(4000, 4000)
+                    .start(this);
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                imageuri = result.getUri();
+                userImage.setImageURI(imageuri);
+            }
+        } else {
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void Continue(View view) {
+
+        userFirstName = inputFirstName.getEditText().getText().toString();
+        userLastName = inputLastName.getEditText().getText().toString();
+        userAge = inputAge.getEditText().getText().toString();
+        userCity = inputCity.getEditText().getText().toString();
+        userGender = inputGender.getEditText().getText().toString();
+        userAbout = inputAbout.getEditText().getText().toString();
+
+        if (userFirstName.isEmpty()) {
+            login.ShowError(inputFirstName, "Please Fill this field");
+            return;
+        }
+        if (userLastName.isEmpty()) {
+            login.ShowError(inputLastName, "Please Fill this field");
+            return;
+        }
+        if (userGender.isEmpty()) {
+            login.ShowError(inputGender, "Please Fill this field");
+            return;
+        }
+        if (userCity.isEmpty()) {
+            login.ShowError(inputCity, "Please Fill this field");
+            return;
+        }
+        if (imageuri == null) {
+            Toast.makeText(this, "Image is necessary", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (userAge.isEmpty())
+            userAge = null;
+        if (userAbout.isEmpty())
+            userAbout = null;
+
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setTitle("Updating");
+        progressDialog.setMessage("Please Wait while we set up your account");
+
+        progressDialog.show();
+        storageReference.child(userId)
+                .putFile(imageuri)
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            storageReference.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    userImageUrl = uri.toString();
+
+                                    Map<String, Object> personalInfo = new HashMap<>();
+                                    personalInfo.put("About", userAbout);
+                                    personalInfo.put("firstName", userFirstName);
+                                    personalInfo.put("lastName", userLastName);
+                                    personalInfo.put("profileImageUrl", null);
+                                    personalInfo.put("userCity", userCity);
+                                    personalInfo.put("userAge", userAge);
+                                    personalInfo.put("username", null);
+                                    personalInfo.put("",null);
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            startActivity(new Intent(Account_Details.this, NewLogin.class));
+            finish();
+        }
     }
 }
