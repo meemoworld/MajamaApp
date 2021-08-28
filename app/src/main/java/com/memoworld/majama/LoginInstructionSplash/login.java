@@ -132,7 +132,7 @@ public class login extends AppCompatActivity {
         }
     }
 
-    public void ShowError(TextInputLayout field, String message) {
+    public static void ShowError(TextInputLayout field, String message) {
         field.setError(message);
     }
 

@@ -28,7 +28,8 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:onClick="SelectImage"/>
 
 
         <LinearLayout
@@ -127,7 +128,8 @@
                 android:id="@+id/autoCompleteText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none" />
+                android:inputType="none"
+                tools:ignore="LabelFor" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,14 +147,14 @@
             app:boxCornerRadiusBottomStart="5dp"
             app:boxCornerRadiusTopEnd="5dp"
             app:boxCornerRadiusTopStart="5dp"
-
             app:endIconDrawable="@drawable/arrow_drop_down">
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:inputType="none" />
+                android:inputType="none"
+                tools:ignore="LabelFor" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -188,6 +190,7 @@
             android:layout_marginBottom="5dp"
             android:backgroundTint="@color/black"
             android:padding="10dp"
+            android:onClick="Continue"
             android:text="Continue"
             android:textAllCaps="false"
             android:textColor="@color/white"

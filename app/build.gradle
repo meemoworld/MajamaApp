@@ -63,6 +63,7 @@ dependencies {
     //Gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
 
-    //Circular Image
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Image Cropper
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.10'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
 }
