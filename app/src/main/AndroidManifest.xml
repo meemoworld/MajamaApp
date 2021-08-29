@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.memoworld.majama">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,23 +12,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Majama">
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
-        <activity android:name=".User.UserNameInput">
-
-        </activity>
-        <activity android:name=".User.Account_Details">
+        <activity android:name=".User.Account_Details"/>
+        <activity android:name=".User.userSettting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".User.UserNameInput">
+
+        </activity>
         <activity android:name=".User.ProfileActivity">
 
         </activity>
         <activity android:name=".LoginInstructionSplash.NewLogin" />
-        <activity android:name=".User.Interest.Interest"/>
+        <activity android:name=".User.Interest.Interest" />
         <activity android:name=".LoginInstructionSplash.SignUpActivity" />
         <activity android:name=".LoginInstructionSplash.login" />
         <activity android:name=".LoginInstructionSplash.SplashActivity" />
