@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".User.userSettting">
+    tools:context=".User.userSetting">
 
     <TextView
         android:id="@+id/myPages"
@@ -13,23 +13,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="10dp"
-        android:drawableStart="@drawable/ic_baseline_insert_drive_file_24"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawablePadding="10dp"
         android:text="My Pages"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:drawableStartCompat="@drawable/ic_baseline_insert_drive_file_24">
 
     </TextView>
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line"
-        android:background="@color/black"
         android:layout_below="@+id/myPages"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/account"
@@ -39,23 +39,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:drawableStart="@drawable/ic_baseline_account_circle_24"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawablePadding="10dp"
         android:text="Account"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_baseline_account_circle_24"
+        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
 
     </TextView>
 
     <View
+        android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line1"
-        android:background="@color/black"
         android:layout_below="@+id/account"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/privacyPolicy"
@@ -65,23 +65,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:drawableStart="@drawable/ic_baseline_lock_24"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawablePadding="10dp"
         android:text="Privacy Policy"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_baseline_lock_24"
+        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
 
     </TextView>
 
     <View
+        android:id="@+id/line2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line2"
-        android:background="@color/black"
         android:layout_below="@+id/privacyPolicy"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/help"
@@ -91,23 +91,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:drawableStart="@drawable/ic_baseline_help_24"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawablePadding="10dp"
         android:text="Help"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_baseline_help_24"
+        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
 
     </TextView>
 
     <View
+        android:id="@+id/line3"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line3"
-        android:background="@color/black"
         android:layout_below="@+id/help"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/withdraw"
@@ -117,23 +117,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:drawableStart="@drawable/ic_baseline_monetization_on_24"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawablePadding="10dp"
         android:text="Withdraw"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_baseline_monetization_on_24"
+        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
 
     </TextView>
 
     <View
+        android:id="@+id/line4"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line4"
-        android:background="@color/black"
         android:layout_below="@+id/withdraw"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
     <TextView
         android:id="@+id/pages"
@@ -143,23 +143,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:drawableStart="@drawable/ic_baseline_insert_drive_file_24"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:drawablePadding="10dp"
         android:text="Pages"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_baseline_insert_drive_file_24"
+        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
 
     </TextView>
 
     <View
+        android:id="@+id/line5"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/line5"
-        android:background="@color/black"
         android:layout_below="@+id/pages"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@color/black" />
 
     <Button
         android:id="@+id/btn_logout"
@@ -169,13 +169,12 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:padding="10dp"
         android:backgroundTint="#CA0B00"
+        android:padding="10dp"
         android:text="Logout"
         android:textAllCaps="false"
-        android:textSize="16sp"
-        android:textColor="@color/white" />
-
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
 
 </RelativeLayout>

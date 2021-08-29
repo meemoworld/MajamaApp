@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Majama">
         <activity android:name=".User.Account_Details"/>
-        <activity android:name=".User.userSettting">
+        <activity android:name=".User.userSetting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
