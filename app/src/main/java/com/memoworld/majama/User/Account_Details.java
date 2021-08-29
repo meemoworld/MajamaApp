@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -51,16 +53,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Account_Details extends AppCompatActivity {
 
 
-    private StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("UserImages").child("ProfileImages");
-    ProgressDialog progressDialog;
-    String userId;
-    Dialog dialog;
+    private final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("UserImages").child("ProfileImages");
+    private static final String TAG = "Account_Details";
+    private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     TextInputLayout inputFirstName, inputLastName, inputAge, inputGender, inputAbout, inputCity;
+    String userFirstName, userLastName, userAge, userCity, userGender, userAbout, userImageUrl, userId;
+    CircleImageView userImage;
+
+
+    ProgressDialog progressDialog;
+    Dialog dialog;
     ArrayList<String> listAll = new ArrayList<String>();
     MaterialButton button;
-    Uri imageuri;
-    CircleImageView userImage;
-    String userFirstName, userLastName, userAge, userCity, userGender, userAbout, userImageUrl;
+    Uri imageUri;
 
     //    Gender Dropdown function
     @Override
@@ -176,7 +181,7 @@ public class Account_Details extends AppCompatActivity {
         inputFirstName = findViewById(R.id.input_first_name_details);
         inputLastName = findViewById(R.id.input_last_name_details);
         inputAbout = findViewById(R.id.input_about_details);
-        inputAge = findViewById(R.id.input_age_details);
+//        inputAge = findViewById(R.id.input_age_details);
         inputCity = findViewById(R.id.input_city_details);
         inputGender = findViewById(R.id.input_gender_details);
         button = findViewById(R.id.btn_continue_details);
@@ -192,8 +197,8 @@ public class Account_Details extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
-            imageuri = data.getData();
-            CropImage.activity(imageuri)
+            imageUri = data.getData();
+            CropImage.activity(imageUri)
                     .setCropShape(CropImageView.CropShape.RECTANGLE)
                     .setAspectRatio(1, 1)
                     .setMaxCropResultSize(4000, 4000)
@@ -201,8 +206,8 @@ public class Account_Details extends AppCompatActivity {
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                imageuri = result.getUri();
-                userImage.setImageURI(imageuri);
+                imageUri = result.getUri();
+                userImage.setImageURI(imageUri);
             }
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
@@ -211,9 +216,9 @@ public class Account_Details extends AppCompatActivity {
 
     public void Continue(View view) {
 
-        userFirstName = inputFirstName.getEditText().getText().toString();
-        userLastName = inputLastName.getEditText().getText().toString();
-        userAge = inputAge.getEditText().getText().toString();
+        userFirstName = inputFirstName.getEditText().getText().toString().toLowerCase();
+        userLastName = inputLastName.getEditText().getText().toString().toLowerCase();
+//        userAge = inputAge.getEditText().getText().toString();
         userCity = inputCity.getEditText().getText().toString();
         userGender = inputGender.getEditText().getText().toString();
         userAbout = inputAbout.getEditText().getText().toString();
@@ -234,48 +239,72 @@ public class Account_Details extends AppCompatActivity {
             login.ShowError(inputCity, "Please Fill this field");
             return;
         }
-        if (imageuri == null) {
+        if (imageUri == null) {
             Toast.makeText(this, "Image is necessary", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (userAge.isEmpty())
-            userAge = null;
+//        if (userAge.isEmpty())
+//            userAge = null;
+
         if (userAbout.isEmpty())
             userAbout = null;
 
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setTitle("Updating");
-        progressDialog.setMessage("Please Wait while we set up your account");
+//        progressDialog.setCanceledOnTouchOutside(false);
+//        progressDialog.setTitle("Updating");
+//        progressDialog.setMessage("Please Wait while we set up your account");
+//        progressDialog.show();
 
-        progressDialog.show();
-        storageReference.child(userId)
-                .putFile(imageuri)
-                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            storageReference.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    userImageUrl = uri.toString();
+        Map<String, Object> personalInfo = new HashMap<>();
+        personalInfo.put("About", userAbout);
+        personalInfo.put("firstName", userFirstName);
+        personalInfo.put("lastName", userLastName);
+        personalInfo.put("profileImageUrl", null);
+        personalInfo.put("userCity", userCity);
+        personalInfo.put("username", null);
+        personalInfo.put("birthDate", null);
 
-                                    Map<String, Object> personalInfo = new HashMap<>();
-                                    personalInfo.put("About", userAbout);
-                                    personalInfo.put("firstName", userFirstName);
-                                    personalInfo.put("lastName", userLastName);
-                                    personalInfo.put("profileImageUrl", null);
-                                    personalInfo.put("userCity", userCity);
-                                    personalInfo.put("userAge", userAge);
-                                    personalInfo.put("username", null);
-                                    personalInfo.put("",null);
+        Thread detailUploadThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                firebaseFirestore.collection("Users").document(userId).set(personalInfo);
+                Log.d(TAG, "run: Details Uploaded");
+            }
+        });
+        detailUploadThread.setPriority(1);
+        detailUploadThread.start();
+        Thread imageUploadThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: Image Upload started");
+                storageReference.child(userId)
+                        .putFile(imageUri)
+                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    storageReference.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            userImageUrl = uri.toString();
+                                            Log.d(TAG, "run: Image Upload ended");
+                                            firebaseFirestore.collection("Users").document(userId).update("profileImageUrl", userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "onSuccess: Image Url Updated");
+                                                }
+                                            });
+
+                                        }
+                                    });
                                 }
-                            });
-                        }
-                    }
-                });
-
-
-
+                            }
+                        });
+            }
+        });
+        imageUploadThread.setPriority(2);
+        imageUploadThread.start();
+        startActivity(new Intent(Account_Details.this, UserNameInput.class));
+        finish();
 
     }
 
