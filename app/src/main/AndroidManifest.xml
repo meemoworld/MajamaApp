@@ -12,23 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Majama">
-        <activity android:name=".User.Account_Details"/>
-        <activity android:name=".User.userSetting">
+        <activity android:name=".User.pagesFollowed">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".User.myPages">
+
+        </activity>
+        <activity android:name=".pages.visitingProfile"></activity>
+        <activity android:name=".pages.visitingMyPages" />
+        <activity android:name=".pages.visitingPage" />
+        <activity android:name=".User.Account_Details" />
+        <activity android:name=".User.userSetting" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".User.UserNameInput">
-
-        </activity>
-        <activity android:name=".User.ProfileActivity">
-
-        </activity>
+        <activity android:name=".User.UserNameInput" />
+        <activity android:name=".User.ProfileActivity" />
         <activity android:name=".LoginInstructionSplash.NewLogin" />
         <activity android:name=".User.Interest.Interest" />
         <activity android:name=".LoginInstructionSplash.SignUpActivity" />
