@@ -1,5 +1,6 @@
 package com.memoworld.majama.User.Interest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,10 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.memoworld.majama.AllModals.EachTag;
 import com.memoworld.majama.AllModals.Tag;
+import com.memoworld.majama.MainActivity;
 import com.memoworld.majama.R;
 
 import java.util.ArrayList;
@@ -36,13 +40,14 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
     private ArrayList<EachTag> tagArrayList = new ArrayList<>();
     private List<String> userInterest;
     private HashMap<String, String> hashMapList;
+    FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intrest);
 
-        if(getSupportActionBar()!=null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
@@ -87,7 +92,11 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
             if (userInterest.contains(tagName)) {
                 Toast.makeText(this, "You have already selected " + tagName, Toast.LENGTH_SHORT).show();
                 return;
-            } else userInterest.add(tagName);
+            } else if (userInterest.size() > 8) {
+                Toast.makeText(this, "You can select a maximum of 8 tags only", Toast.LENGTH_SHORT).show();
+                return;
+            } else
+                userInterest.add(tagName);
         } else {
             userInterest.add(tagName);
         }
@@ -110,9 +119,9 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
                     tag = documentSnapshot.toObject(Tag.class);
                     if (tag != null) {
                         hashMapList = tag.getTagmap();
-                            for (Map.Entry<String, String> entry : hashMapList.entrySet()) {
-                                tagArrayList.add(new EachTag(entry.getKey(), entry.getValue()));
-                            }
+                        for (Map.Entry<String, String> entry : hashMapList.entrySet()) {
+                            tagArrayList.add(new EachTag(entry.getKey(), entry.getValue()));
+                        }
                         interestAdapter = new InterestAdapter(Interest.this, tagArrayList);
                         recyclerView.setAdapter(interestAdapter);
                     }
@@ -128,8 +137,22 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
         userInterest.remove(chip.getText().toString());
     }
 
-    public void Continue(View View) {
-        // TODO: This is to be completed
-        Toast.makeText(this, "To complete", Toast.LENGTH_SHORT).show();
+    public void ContinueInterest(View View) {
+
+        if (userInterest.size() < 5) {
+            Toast.makeText(this, "Please Select atleast 5 tags ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Thread updateInterest = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                firebaseFirestore.collection("Users").document(mUser.getUid()).update("interest", userInterest);
+            }
+        });
+        updateInterest.setPriority(1);
+        updateInterest.start();
+        startActivity(new Intent(Interest.this, MainActivity.class));
+        finish();
+
     }
 }

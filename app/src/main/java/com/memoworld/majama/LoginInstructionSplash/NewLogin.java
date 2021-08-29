@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.memoworld.majama.MainActivity;
 import com.memoworld.majama.R;
+import com.memoworld.majama.User.Account_Details;
+import com.memoworld.majama.User.UserNameInput;
 
 public class NewLogin extends AppCompatActivity {
 
@@ -90,7 +92,7 @@ public class NewLogin extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(NewLogin.this, MainActivity.class);
+            Intent intent = new Intent(NewLogin.this, UserNameInput.class);
             startActivity(intent);
             finish();
         } else {

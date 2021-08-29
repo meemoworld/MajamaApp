@@ -28,24 +28,6 @@
             android:hint="Username" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_date_pick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        android:backgroundTint="@color/black"
-        android:padding="10dp"
-        android:text="Enter Your Birthday"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_username" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/save_username_birthday"
@@ -65,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_date_pick" />
+        app:layout_constraintTop_toBottomOf="@+id/input_username" />
 
     <ImageView
         android:id="@+id/imageView3"

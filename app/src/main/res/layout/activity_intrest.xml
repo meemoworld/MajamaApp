@@ -32,6 +32,7 @@
                 android:layout_marginRight="7dp"
                 android:layout_weight="1"
                 android:text="Save"
+                android:onClick="ContinueInterest"
                 android:textAllCaps="false"
                 android:backgroundTint="@color/black"/>
 
