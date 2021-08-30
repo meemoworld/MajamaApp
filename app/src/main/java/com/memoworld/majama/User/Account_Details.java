@@ -35,6 +35,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,9 +55,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,6 +69,7 @@ public class Account_Details extends AppCompatActivity {
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     TextInputLayout inputFirstName, inputLastName, inputAge, inputGender, inputAbout, inputCity;
     String userFirstName, userLastName, userAge, userCity, userGender, userAbout, userImageUrl, userId, birthday = null, username;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");// Realtime Database
     CircleImageView userImage;
     private MaterialButton btnDatePicker;
 
@@ -106,7 +109,7 @@ public class Account_Details extends AppCompatActivity {
             getSupportActionBar().hide();
         initialize();
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +120,8 @@ public class Account_Details extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(Account_Details.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        birthday = SimpleDateFormat.getDateInstance().format(calendar.getTime());
+                        birthday = dayOfMonth + "/" + month + "/" + year;
+//                        birthday = SimpleDateFormat.getDateInstance().format(calendar.getTime());
                         btnDatePicker.setText(birthday);
 
                     }
@@ -291,7 +295,9 @@ public class Account_Details extends AppCompatActivity {
             userAbout = null;
 
 
-        userDetailsFirestore = new UserDetailsFirestore(userAbout, userFirstName, userLastName, null, userCity, username, birthday, Timestamp.now(),null);
+
+
+        userDetailsFirestore = new UserDetailsFirestore(userAbout, userFirstName, userLastName, null, userCity, username, birthday, Timestamp.now(), null);
 
         Thread detailUploadThread = new Thread(new Runnable() {
             @Override
@@ -335,6 +341,21 @@ public class Account_Details extends AppCompatActivity {
         detailUploadThread.start();
         imageUploadThread.setPriority(2);
         imageUploadThread.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HashMap<String,String> hashMap=new HashMap<>();
+                hashMap.put("lastName",userLastName);
+                hashMap.put("birthday",birthday);
+                hashMap.put("city",userCity);
+                databaseReference.child(userId).child("personalInfo").setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: Realtime databases updated");
+                    }
+                });
+            }
+        }).start();
 
         startActivity(new Intent(Account_Details.this, Interest.class));
         finish();
