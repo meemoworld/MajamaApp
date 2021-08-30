@@ -41,7 +41,7 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        int index=position*3;
+      final int index=position*3;
         if(index<tags.size()) {
             holder.interestTagText.setText(tags.get(index).getTagName());
             Glide.with(context).load(tags.get(index).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
