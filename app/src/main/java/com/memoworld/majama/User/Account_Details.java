@@ -1,9 +1,14 @@
 package com.memoworld.majama.User;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -13,12 +18,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,14 +33,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.memoworld.majama.LoginInstructionSplash.NewLogin;
+import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.LoginInstructionSplash.login;
 import com.memoworld.majama.R;
+import com.memoworld.majama.User.Interest.Interest;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -45,34 +56,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Account_Details extends AppCompatActivity {
 
-
+    Context context;
     private final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("UserImages").child("ProfileImages");
     private static final String TAG = "Account_Details";
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     TextInputLayout inputFirstName, inputLastName, inputAge, inputGender, inputAbout, inputCity;
-    String userFirstName, userLastName, userAge, userCity, userGender, userAbout, userImageUrl, userId;
+    String userFirstName, userLastName, userAge, userCity, userGender, userAbout, userImageUrl, userId, birthday = null, username;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");// Realtime Database
     CircleImageView userImage;
-
+    private MaterialButton btnDatePicker;
 
     ProgressDialog progressDialog;
     Dialog dialog;
     ArrayList<String> listAll = new ArrayList<String>();
     MaterialButton button;
     Uri imageUri;
+    UserDetailsFirestore userDetailsFirestore;
 
     //    Gender Dropdown function
     @Override
     protected void onPostResume() {
         super.onPostResume();
 
-        String[] gender = new String[]{"Male", "Female", "Others"};
+        String[] gender = new String[]{"Male", "Female", "Prefer Not to Say"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.gender_dropdown, gender);
 
@@ -80,26 +93,50 @@ public class Account_Details extends AppCompatActivity {
         autoCompleteTextView.setAdapter(adapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_details);
-
+        context = this;
+        if (!isNetworkAvailable()) {
+            Toast.makeText(this, "Please check your internet and try again", Toast.LENGTH_SHORT).show();
+        }
         obj_list();
         progressDialog = new ProgressDialog(this);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
-
-
         initialize();
+
+        final Calendar calendar = Calendar.getInstance();
+
+        btnDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentYear = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Account_Details.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        birthday = dayOfMonth + "/" + month + "/" + year;
+//                        birthday = SimpleDateFormat.getDateInstance().format(calendar.getTime());
+                        btnDatePicker.setText(birthday);
+
+                    }
+                }, currentYear, month, day);
+                datePickerDialog.show();
+            }
+        });
+
 
         inputCity.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog = new Dialog(Account_Details.this);
                 dialog.setContentView(R.layout.dialog_searchable_city);
-                dialog.getWindow().setLayout(850, 1000);
+                dialog.getWindow().setLayout(700, 1000);
 //                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
                 EditText editText = dialog.findViewById(R.id.editText_city_search);
@@ -186,6 +223,8 @@ public class Account_Details extends AppCompatActivity {
         inputGender = findViewById(R.id.input_gender_details);
         button = findViewById(R.id.btn_continue_details);
         userImage = findViewById(R.id.profile_image_details);
+        btnDatePicker = findViewById(R.id.btn_date_pick);
+        username = getIntent().getStringExtra("username");
     }
 
     public void SelectImage(View view) {
@@ -214,6 +253,7 @@ public class Account_Details extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void Continue(View view) {
 
         userFirstName = inputFirstName.getEditText().getText().toString().toLowerCase();
@@ -243,35 +283,31 @@ public class Account_Details extends AppCompatActivity {
             Toast.makeText(this, "Image is necessary", Toast.LENGTH_SHORT).show();
             return;
         }
-//        if (userAge.isEmpty())
-//            userAge = null;
-
+        if (birthday == null) {
+            Toast.makeText(this, "Birthday is necessary", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!isNetworkAvailable()) {
+            Toast.makeText(this, "Please check your internet and try again", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (userAbout.isEmpty())
             userAbout = null;
 
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.setTitle("Updating");
-//        progressDialog.setMessage("Please Wait while we set up your account");
-//        progressDialog.show();
 
-        Map<String, Object> personalInfo = new HashMap<>();
-        personalInfo.put("About", userAbout);
-        personalInfo.put("firstName", userFirstName);
-        personalInfo.put("lastName", userLastName);
-        personalInfo.put("profileImageUrl", null);
-        personalInfo.put("userCity", userCity);
-        personalInfo.put("username", null);
-        personalInfo.put("birthDate", null);
+
+
+        userDetailsFirestore = new UserDetailsFirestore(userAbout, userFirstName, userLastName, null, userCity, username, birthday, Timestamp.now(), null);
 
         Thread detailUploadThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                firebaseFirestore.collection("Users").document(userId).set(personalInfo);
+                Log.d(TAG, "run: Detail Uploading started");
+                firebaseFirestore.collection("Users").document(userId).set(userDetailsFirestore);
                 Log.d(TAG, "run: Details Uploaded");
             }
         });
         detailUploadThread.setPriority(1);
-        detailUploadThread.start();
         Thread imageUploadThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -301,11 +337,28 @@ public class Account_Details extends AppCompatActivity {
                         });
             }
         });
+
+        detailUploadThread.start();
         imageUploadThread.setPriority(2);
         imageUploadThread.start();
-        startActivity(new Intent(Account_Details.this, UserNameInput.class));
-        finish();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HashMap<String,String> hashMap=new HashMap<>();
+                hashMap.put("lastName",userLastName);
+                hashMap.put("birthday",birthday);
+                hashMap.put("city",userCity);
+                databaseReference.child(userId).child("personalInfo").setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: Realtime databases updated");
+                    }
+                });
+            }
+        }).start();
 
+        startActivity(new Intent(Account_Details.this, Interest.class));
+        finish();
     }
 
     @Override
@@ -314,8 +367,25 @@ public class Account_Details extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         } else {
-            startActivity(new Intent(Account_Details.this, NewLogin.class));
+            startActivity(new Intent(Account_Details.this, Interest.class));
             finish();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkCapabilities capabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());
+        boolean isAvailable = false;
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                isAvailable = true;
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                isAvailable = true;
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                isAvailable = true;
+            }
+        }
+        return isAvailable;
     }
 }

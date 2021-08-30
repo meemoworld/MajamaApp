@@ -86,29 +86,6 @@
 
         </LinearLayout>
 
-<!--        <com.google.android.material.textfield.TextInputLayout-->
-<!--            android:id="@+id/input_age_details"-->
-<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/linear"-->
-<!--            android:layout_marginLeft="10dp"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:layout_marginBottom="5dp"-->
-<!--            android:hint="Age"-->
-<!--            app:boxCornerRadiusBottomEnd="5dp"-->
-<!--            app:boxCornerRadiusBottomStart="5dp"-->
-<!--            app:boxCornerRadiusTopEnd="5dp"-->
-<!--            app:boxCornerRadiusTopStart="5dp">-->
-
-<!--            <com.google.android.material.textfield.TextInputEditText-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:inputType="number"-->
-<!--                android:maxLength="2" />-->
-
-<!--        </com.google.android.material.textfield.TextInputLayout>-->
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_gender_details"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -178,12 +155,27 @@
                 android:inputType="textMultiLine" />
 
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_date_pick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/black"
+            android:padding="10dp"
+            android:text="Select Your birthday"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            android:layout_below="@+id/input_about_details"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_continue_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/input_about_details"
+            android:layout_below="@+id/btn_date_pick"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
