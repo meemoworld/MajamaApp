@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivityFragments.Search">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello This is Search Fragment"
-        android:gravity="center"/>
+        android:layout_below="@+id/tabLayout">
 
-</FrameLayout>
+    </androidx.viewpager2.widget.ViewPager2>
+
+</RelativeLayout>
