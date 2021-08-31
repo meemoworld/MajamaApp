@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_view_visiting_profile"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
@@ -28,7 +29,7 @@
             android:layout_weight="2">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/name_txt_box_visiting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -41,10 +42,10 @@
             </TextView>
 
             <TextView
-                android:id="@+id/bio"
+                android:id="@+id/about_visiting_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
+                android:layout_below="@+id/name_txt_box_visiting"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
@@ -72,7 +73,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/countFollower"
+                android:id="@+id/count_follower_visiting_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -86,7 +87,7 @@
                 android:id="@+id/follower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/countFollower"
+                android:layout_below="@+id/count_follower_visiting_profile"
                 android:gravity="center"
                 android:text="Followers"
                 android:textSize="18sp"
@@ -102,7 +103,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/balance"
+                android:id="@+id/count_following_visiting_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -116,7 +117,7 @@
                 android:id="@+id/bal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/balance"
+                android:layout_below="@+id/count_following_visiting_profile"
                 android:gravity="center"
                 android:text="Following"
                 android:textSize="18sp"
@@ -129,7 +130,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/follow"
+        android:id="@+id/follow_btn_visiting_profile"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,13 +147,13 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/follow"
+        android:layout_below="@+id/follow_btn_visiting_profile"
         android:layout_marginTop="10dp"
         android:background="@color/black" />
 
 
-
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_visiting_profile_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line"

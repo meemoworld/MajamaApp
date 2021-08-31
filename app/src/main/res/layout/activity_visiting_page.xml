@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_view_visiting_page"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
@@ -28,7 +29,7 @@
             android:layout_weight="2">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/page_name_txt_box_visit_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -41,10 +42,10 @@
             </TextView>
 
             <TextView
-                android:id="@+id/bio"
+                android:id="@+id/about_page_visiting_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
+                android:layout_below="@+id/page_name_txt_box_visit_page"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
@@ -72,7 +73,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/countFollower"
+                android:id="@+id/count_follower_visiting_page"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -86,7 +87,7 @@
                 android:id="@+id/follower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/countFollower"
+                android:layout_below="@+id/count_follower_visiting_page"
                 android:gravity="center"
                 android:text="Followers"
                 android:textSize="18sp"
@@ -97,7 +98,7 @@
         </RelativeLayout>
 
         <Button
-            android:id="@+id/follow"
+            android:id="@+id/follow_btn_visiting_page"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -121,6 +122,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        android:id="@+id/recycler_view_visiting_page"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line"
         android:layout_marginLeft="1dp"
