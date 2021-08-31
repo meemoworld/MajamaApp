@@ -41,14 +41,14 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        int index=position*3;
+      final int index=position*3;
         if(index<tags.size()) {
             holder.interestTagText.setText(tags.get(index).getTagName());
             Glide.with(context).load(tags.get(index).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
         }else{
-            holder.imageView.setVisibility(View.GONE);
-            holder.interestTagText.setVisibility(View.GONE);
-            holder.layout1.setClickable(false);
+            holder.imageView.setVisibility(View.INVISIBLE);
+            holder.interestTagText.setVisibility(View.INVISIBLE);
+            holder.layout1.setVisibility(View.INVISIBLE);
         }
 //        Log.i(TAG, "onBindViewHolder: after 1 : "+index);
         if(index+1<tags.size()) {
@@ -56,9 +56,9 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyView
             Glide.with(context).load(tags.get(index + 1).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView1);
         }
         else{
-            holder.imageView1.setVisibility(View.GONE);
-            holder.interestTagText1.setVisibility(View.GONE);
-            holder.layout2.setClickable(false);
+            holder.imageView1.setVisibility(View.INVISIBLE);
+            holder.interestTagText1.setVisibility(View.INVISIBLE);
+            holder.layout2.setVisibility(View.INVISIBLE);
         }
 //        Log.i(TAG, "onBindViewHolder:  after 2: "+index);
         if(index+2<tags.size())
@@ -67,9 +67,9 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.MyView
             Glide.with(context).load(tags.get(index + 2).getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView2);
         }
         else{
-            holder.imageView2.setVisibility(View.GONE);
-            holder.interestTagText2.setVisibility(View.GONE);
-            holder.layout3.setClickable(false);
+            holder.imageView2.setVisibility(View.INVISIBLE);
+            holder.interestTagText2.setVisibility(View.INVISIBLE);
+            holder.layout3.setVisibility(View.INVISIBLE);
         }
         holder.layout1.setOnClickListener(new View.OnClickListener() {
             @Override

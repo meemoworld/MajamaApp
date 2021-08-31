@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
 
 import java.util.HashMap;
@@ -34,7 +35,8 @@ public class UserNameInput extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_name_input);
 
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
 
         inputUserName = findViewById(R.id.input_username);
 
@@ -87,7 +89,7 @@ public class UserNameInput extends AppCompatActivity {
                 if (username == null)
                     Toast.makeText(UserNameInput.this, "Please user another username", Toast.LENGTH_SHORT).show();
                 else {
-                    usernameMap.put(FirebaseAuth.getInstance().getCurrentUser().getUid(),username);
+                    usernameMap.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), username);
                     updateUsernameMap.start();
                     Intent intent = new Intent(UserNameInput.this, Account_Details.class);
                     intent.putExtra("username", username);
@@ -96,6 +98,25 @@ public class UserNameInput extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(UserNameInput.this, NewLogin.class));
+            finish();
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(UserNameInput.this, NewLogin.class));
+            finish();
+        }
 
     }
 }

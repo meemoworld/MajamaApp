@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_view_my_page_visiting"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
@@ -28,10 +29,10 @@
             android:layout_weight="2">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/name_txt_box_my_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_weight="2"
                 android:text="Wet Billi"
@@ -41,10 +42,10 @@
             </TextView>
 
             <TextView
-                android:id="@+id/bio"
+                android:id="@+id/about_visiting_my_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
+                android:layout_below="@+id/name_txt_box_my_page"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
@@ -64,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linear"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -72,7 +74,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/countFollower"
+                android:id="@+id/count_follower_visiting_my_page"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -86,7 +88,7 @@
                 android:id="@+id/follower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/countFollower"
+                android:layout_below="@+id/count_follower_visiting_my_page"
                 android:gravity="center"
                 android:text="Followers"
                 android:textSize="18sp"
@@ -102,7 +104,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/balance"
+                android:id="@+id/balance_my_page"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -116,7 +118,7 @@
                 android:id="@+id/bal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/balance"
+                android:layout_below="@+id/balance_my_page"
                 android:gravity="center"
                 android:text="Balance"
                 android:textSize="18sp"
@@ -137,23 +139,23 @@
         android:background="@color/black" />
 
     <Button
-        android:id="@+id/upload"
-        android:layout_marginTop="5dp"
+        android:id="@+id/upload_btn_my_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
         android:backgroundTint="@color/black"
         android:text="Upload"
         android:textAllCaps="false"
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_visiting_my_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/upload"
+        android:layout_below="@+id/upload_btn_my_page"
         android:layout_marginLeft="1dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="1dp"

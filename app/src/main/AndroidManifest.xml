@@ -13,7 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Majama">
+
         <activity android:name=".requestActivity"></activity>
+
+        <activity android:name=".TestCrash">
+
+        </activity>
+
         <activity android:name=".User.pagesFollowed"></activity>
         <activity android:name=".User.myPages"></activity>
         <activity android:name=".pages.visitingProfile" />
