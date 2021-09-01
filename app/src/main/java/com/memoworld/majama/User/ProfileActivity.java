@@ -1,5 +1,6 @@
 package com.memoworld.majama.User;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,10 +21,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(" User");
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-        }
     }
 
     @Override
@@ -35,8 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.prfile_activity_menu) {
-            Toast.makeText(this, "It is in production..😁", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.profile_activity_menu) {
+            startActivity(new Intent(ProfileActivity.this,userSetting.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

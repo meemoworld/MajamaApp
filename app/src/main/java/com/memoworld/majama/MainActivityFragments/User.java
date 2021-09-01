@@ -1,5 +1,7 @@
 package com.memoworld.majama.MainActivityFragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +25,7 @@ import com.memoworld.majama.R;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_user, container, false);
+
         return view;
     }
 }

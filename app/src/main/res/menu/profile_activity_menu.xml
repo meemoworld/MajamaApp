@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Menu"
-        android:id="@+id/prfile_activity_menu"
-        android:icon="@drawable/ic_baseline_menu_24"
+        android:title="Settings"
+        android:id="@+id/profile_activity_menu"
+        android:icon="@drawable/ic_baseline_settings_24"
         app:showAsAction="always"/>
 </menu>
