@@ -124,13 +124,14 @@
             app:boxCornerRadiusBottomStart="5dp"
             app:boxCornerRadiusTopEnd="5dp"
             app:boxCornerRadiusTopStart="5dp"
-            app:endIconDrawable="@drawable/arrow_drop_down">
+            app:endIconDrawable="@drawable/arrow_drop_down"
+            app:endIconMode="custom">
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
                 android:inputType="none"
+                android:padding="15dp"
                 tools:ignore="LabelFor" />
 
         </com.google.android.material.textfield.TextInputLayout>

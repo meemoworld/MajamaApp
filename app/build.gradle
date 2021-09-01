@@ -72,4 +72,7 @@ dependencies {
     //Image Cropper
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.10'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+
+    //Swipe in Recycler View
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 }
