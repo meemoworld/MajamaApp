@@ -3,17 +3,20 @@ package com.memoworld.majama.User;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.memoworld.majama.R;
 
 public class userSetting extends AppCompatActivity {
 
 
     private TextView myPages,account,privacyPolicy,help,withDraw,pages;
+    private BottomSheetDialog bottomSheetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,5 +59,14 @@ public class userSetting extends AppCompatActivity {
     }
 
     public void Pages(View view) {
+    }
+
+    public void displayDialog(){
+        bottomSheetDialog = new BottomSheetDialog(userSetting.this , R.style.BottomSheetTheme);
+
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_user_settting , findViewById(R.id.bottom_sheet));
+
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
     }
 }
