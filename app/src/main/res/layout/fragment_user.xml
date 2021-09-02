@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_image_user_fragment"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
@@ -28,7 +29,7 @@
             android:layout_weight="2">
 
             <TextView
-                android:id="@+id/name_txt_box_visiting"
+                android:id="@+id/name_txt_box_user_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -41,10 +42,10 @@
             </TextView>
 
             <TextView
-                android:id="@+id/about_visiting_profile"
+                android:id="@+id/about_user_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name_txt_box_visiting"
+                android:layout_below="@+id/name_txt_box_user_fragment"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
@@ -73,7 +74,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/count_follower_visiting_profile"
+                android:id="@+id/count_follower_user_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -87,7 +88,7 @@
                 android:id="@+id/follower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/count_follower_visiting_profile"
+                android:layout_below="@+id/count_follower_user_fragment"
                 android:gravity="center"
                 android:text="Followers"
                 android:textSize="18sp"
@@ -103,7 +104,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/countFollowing"
+                android:id="@+id/countFollowing_user_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -117,7 +118,7 @@
                 android:id="@+id/following"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/countFollowing"
+                android:layout_below="@+id/countFollowing_user_fragment"
                 android:gravity="center"
                 android:text="Following"
                 android:textSize="18sp"
@@ -133,7 +134,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/count_following_visiting_profile"
+                android:id="@+id/balance_user_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -147,7 +148,7 @@
                 android:id="@+id/bal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/count_following_visiting_profile"
+                android:layout_below="@+id/balance_user_fragment"
                 android:gravity="center"
                 android:text="Balance"
                 android:textSize="18sp"
@@ -175,6 +176,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="3dp"
+        android:id="@+id/recycler_view_user_fragment"
         tools:listitem="@layout/interest_single_item_layout" />
 
 

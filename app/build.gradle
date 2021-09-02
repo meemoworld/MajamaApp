@@ -75,4 +75,10 @@ dependencies {
 
     //Swipe in Recycler View
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+    // FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database:8.0.0'
+
+    // FirebaseUI for Cloud Firestore
+    implementation 'com.firebaseui:firebase-ui-firestore:8.0.0'
+
 }

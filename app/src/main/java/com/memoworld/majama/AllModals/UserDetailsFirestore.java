@@ -5,9 +5,10 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 
 public class UserDetailsFirestore {
-    private String About,firstName,lastName,profileImageUrl,userCity,username,birthDate;
+    private String About,firstName,lastName,profileImageUrl,userCity,username,birthDate,balance;
     private Timestamp accountCreationTime;
     private ArrayList<String> interest;
+    private Integer followers,following;
 
     public UserDetailsFirestore(String about, String firstName, String lastName, String profileImageUrl, String userCity, String username, String birthDate, Timestamp accountCreationTime, ArrayList<String> interest) {
         About = about;
@@ -19,6 +20,33 @@ public class UserDetailsFirestore {
         this.birthDate = birthDate;
         this.accountCreationTime = accountCreationTime;
         this.interest = interest;
+        balance="0.0";
+        followers=0;
+        following=0;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+    public Integer getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Integer followers) {
+        this.followers = followers;
+    }
+
+    public Integer getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Integer following) {
+        this.following = following;
     }
 
     public ArrayList<String> getInterest() {

@@ -42,6 +42,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
+import com.memoworld.majama.AllModals.UserDetailsRealtime;
 import com.memoworld.majama.LoginInstructionSplash.login;
 import com.memoworld.majama.R;
 import com.memoworld.majama.User.Interest.Interest;
@@ -344,11 +345,8 @@ public class Account_Details extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HashMap<String,String> hashMap=new HashMap<>();
-                hashMap.put("lastName",userLastName);
-                hashMap.put("birthday",birthday);
-                hashMap.put("city",userCity);
-                databaseReference.child(userId).child("personalInfo").setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                UserDetailsRealtime userDetailsRealtime=new UserDetailsRealtime(birthday,userCity,userLastName);
+                databaseReference.child(userId).child("personalInfo").setValue(userDetailsRealtime).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess: Realtime databases updated");
