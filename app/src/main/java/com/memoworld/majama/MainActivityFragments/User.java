@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -45,7 +46,7 @@ public class User extends Fragment {
     String userId = user.getUid();
     Thread thread;
     ArrayList<Post> arrayList = new ArrayList<>();
-
+    private BottomSheetDialog bottomSheetDialog;
     Toolbar toolbar;
 
     FirestoreRecyclerAdapter<Post, PostViewHolder> adapter;
@@ -171,11 +172,25 @@ public class User extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.settings_menu_users)
-        {
-            Toast.makeText(getContext(), "Clicked...", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.settings_menu_users) {
+            displayDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void displayDialog() {
+        bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
+
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.activity_user_settting, getView().findViewById(R.id.bottom_sheet));
+
+        bottomSheetDialog.setContentView(view);
+        view.findViewById(R.id.myPages).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "My pages Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        bottomSheetDialog.show();
     }
 }
