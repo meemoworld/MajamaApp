@@ -6,12 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivityFragments.Home">
 
-    <include
-        android:id="@+id/main_appBar"
-        layout="@layout/custom_layout"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_appBar_home"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        android:theme="@style/Theme.MainMajama"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.appcompat.widget.Toolbar>
+<!--    <include-->
+<!--        android:id="@+id/main_appBar_home"-->
+<!--        layout="@layout/custom_layout"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"/>-->
 
 
 
@@ -24,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_appBar"
+        app:layout_constraintTop_toBottomOf="@+id/main_appBar_home"
         app:rotation_degrees="15.5"
         tools:context=".MyActivity"
         tools:listitem="@layout/single_view_card" />

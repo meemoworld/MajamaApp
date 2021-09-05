@@ -4,17 +4,21 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.collection.LLRBNode;
+import com.google.type.Color;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.memoworld.majama.R;
 
@@ -37,6 +41,17 @@ public class Home extends Fragment {
         View view=inflater.inflate(R.layout.fragment_home, container, false);
 
         flingContainer=view.findViewById(R.id.frame);
+        Toolbar toolbar = view.findViewById(R.id.main_appBar_home);
+
+        toolbar.inflateMenu(R.menu.topbar_main_menu);
+        toolbar.setTitle("Home");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+//        AppCompatActivity compatActivity=(AppCompatActivity)getActivity();
+//        compatActivity.setSupportActionBar(toolbar);
+//        compatActivity.getSupportActionBar().setTitle("Home");
+//        compatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         al = new ArrayList<>();
         al.add(new MainCardModel("php"));
         al.add(new MainCardModel("c"));
@@ -106,5 +121,14 @@ public class Home extends Fragment {
 //            Glide.with(context).load(card_item.getProfileImageUrl()).into(imageView);
             return convertView;
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.chat_main_menu){
+            Toast.makeText(getContext(), "In progress..", Toast.LENGTH_SHORT).show();
+            return  true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 }

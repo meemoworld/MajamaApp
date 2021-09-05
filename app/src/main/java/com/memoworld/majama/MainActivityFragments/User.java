@@ -1,21 +1,27 @@
 package com.memoworld.majama.MainActivityFragments;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,8 +29,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.memoworld.majama.AllModals.Post;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.R;
@@ -42,6 +46,10 @@ public class User extends Fragment {
     Thread thread;
     ArrayList<Post> arrayList = new ArrayList<>();
 
+    Toolbar toolbar;
+
+    FirestoreRecyclerAdapter<Post, PostViewHolder> adapter;
+
     public User() {
         // Required empty public constructor
     }
@@ -58,40 +66,34 @@ public class User extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         initialize(view);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        toolbar.inflateMenu(R.menu.user_fragment_menu);
+        toolbar.setTitle("User");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+
         thread = new Thread(getData);
         thread.start();
-        if (userDetailsFirestore == null) {
-            thread.start();
-        } else {
-            Glide.with(view).load(userDetailsFirestore.getProfileImageUrl()).into(userImage);
-            String userFinalName = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
-            userName.setText(userFinalName);
-            if (userAbout != null)
-                userAbout.setText(userDetailsFirestore.getAbout());
-            else
-                userAbout.setVisibility(View.INVISIBLE);
-            if (userDetailsFirestore.getFollowing() != null)
-                followings.setText(userDetailsFirestore.getFollowing());
-            if (userDetailsFirestore.getFollowers() != null)
-                followers.setText(userDetailsFirestore.getFollowers());
-            if (userDetailsFirestore.getBalance() != null)
-                balance.setText(userDetailsFirestore.getBalance());
 
-            ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        Log.d(TAG, "onEvent: Failed");
-                        return;
-                    }
-                    for (QueryDocumentSnapshot documentSnapshot : value) {
-                        arrayList.add(documentSnapshot.toObject(Post.class));
-                    }
-                }
-            });
-            recyclerView.setLayoutManager(new GridLayoutManager());
-        }
+//        Query query = ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING);
+
+//        recyclerView.setLayoutManager(new GridAutoFitLayoutManager(getContext(), view.getWidth()));
         return view;
+
+
+//            ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                    if (error != null) {
+//                        Log.d(TAG, "onEvent: Failed");
+//                        return;
+//                    }
+//                    for (QueryDocumentSnapshot documentSnapshot : value) {
+//                        arrayList.add(documentSnapshot.toObject(Post.class));
+//                    }
+//                }
+//            });
+
     }
 
     Runnable getData = new Runnable() {
@@ -102,11 +104,46 @@ public class User extends Fragment {
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (value.exists()) {
                         userDetailsFirestore = value.toObject(UserDetailsFirestore.class);
+                        Glide.with(getContext()).load(userDetailsFirestore.getProfileImageUrl()).into(userImage);
+                        String userFinalName = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
+                        userName.setText(userFinalName);
+                        if (userAbout != null)
+                            userAbout.setText(userDetailsFirestore.getAbout());
+                        else
+                            userAbout.setVisibility(View.INVISIBLE);
+                        if (userDetailsFirestore.getFollowing() != null)
+                            followings.setText(userDetailsFirestore.getFollowing());
+                        if (userDetailsFirestore.getFollowers() != null)
+                            followers.setText(userDetailsFirestore.getFollowers());
+                        if (userDetailsFirestore.getBalance() != null)
+                            balance.setText(userDetailsFirestore.getBalance());
                     }
                 }
             });
+            Query query = ff.collection("Users").document(userId).collection("Posts");
+
+            FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
+
+            adapter = new FirestoreRecyclerAdapter<Post, PostViewHolder>(options) {
+                @Override
+                protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post model) {
+//                Glide.with(view).load(model.getImageUrl()).into(holder.imageView);
+                    Log.d(TAG, "onBindViewHolder: " + position);
+                    holder.imageView.setImageResource(R.drawable.coder);
+                }
+
+                @NonNull
+                @Override
+                public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
+                    return new PostViewHolder(view1);
+                }
+            };
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
     };
+
 
     private void initialize(View view) {
 
@@ -117,47 +154,28 @@ public class User extends Fragment {
         followings = view.findViewById(R.id.countFollowing_user_fragment);
         balance = view.findViewById(R.id.balance_user_fragment);
         recyclerView = view.findViewById(R.id.recycler_view_user_fragment);
+        toolbar = view.findViewById(R.id.main_appBar_user);
     }
 
-    private class PostViewHolder extends RecyclerView.ViewHolder {
+    private static class PostViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView interestTagText;
-        private final TextView interestTagText1;
-        private final TextView interestTagText2;
         private final ImageView imageView;
-        private final ImageView imageView1;
-        private final ImageView imageView2;
         private final ConstraintLayout layout1;
-        private final ConstraintLayout layout2;
-        private final ConstraintLayout layout3;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
-            interestTagText = itemView.findViewById(R.id.name_text_box_singleItem);
-            interestTagText1 = itemView.findViewById(R.id.name_text_box_singleItem1);
-            interestTagText2 = itemView.findViewById(R.id.name_text_box_singleItem2);
-            imageView = itemView.findViewById(R.id.Image);
-            imageView1 = itemView.findViewById(R.id.Image1);
-            imageView2 = itemView.findViewById(R.id.Image2);
-
-            layout1 = itemView.findViewById(R.id.constraint1);
-            layout2 = itemView.findViewById(R.id.constraint2);
-            layout3 = itemView.findViewById(R.id.constraint3);
+            imageView = itemView.findViewById(R.id.user_post_image_single_view);
+            layout1 = itemView.findViewById(R.id.layout_single_post_user);
         }
     }
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.profile_activity_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if (item.getItemId() == R.id.profile_activity_menu) {
-//            startActivity(new Intent(ProfileActivity.this, userSetting.class));
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.settings_menu_users)
+        {
+            Toast.makeText(getContext(), "Clicked...", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

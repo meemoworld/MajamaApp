@@ -7,17 +7,17 @@
     tools:context=".MainActivity">
 
     <include
-        android:id="@+id/main_appBar"
+        android:id="@+id/main_appBar_user"
         layout="@layout/custom_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_appBar"
+        android:layout_below="@+id/main_appBar_user"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -177,6 +177,7 @@
         android:background="@color/black" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_user_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line"
@@ -184,8 +185,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="3dp"
-        android:id="@+id/recycler_view_user_fragment"
-        tools:listitem="@layout/interest_single_item_layout" />
+        tools:itemCount="2"
+        tools:listitem="@layout/single_user_post_view" />
 
 
 </RelativeLayout>
