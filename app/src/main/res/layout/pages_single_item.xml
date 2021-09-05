@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout_single_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/pages"
+        android:id="@+id/page_name_single_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:drawablePadding="10dp"
-        android:text="Pages"
+        android:hint="name"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -23,7 +24,7 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_below="@+id/pages"
+        android:layout_below="@+id/page_name_single_view"
         android:layout_marginTop="10dp"
         android:background="@color/black" />
 

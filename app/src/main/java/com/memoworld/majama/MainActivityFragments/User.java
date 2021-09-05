@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.memoworld.majama.AllModals.Post;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
+import com.memoworld.majama.GridAutoFitLayoutManager;
 import com.memoworld.majama.R;
 
 import java.util.ArrayList;
@@ -78,7 +79,29 @@ public class User extends Fragment {
 
 //        Query query = ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING);
 
-//        recyclerView.setLayoutManager(new GridAutoFitLayoutManager(getContext(), view.getWidth()));
+        Query query = ff.collection("Users").document(userId).collection("Posts");
+
+        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
+
+        adapter = new FirestoreRecyclerAdapter<Post, PostViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post model) {
+//                Glide.with(view).load(model.getImageUrl()).into(holder.imageView);
+                Log.d(TAG, "onBindViewHolder: " + position);
+                holder.imageView.setImageResource(R.drawable.coder);
+            }
+
+            @NonNull
+            @Override
+            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
+                return new PostViewHolder(view1);
+            }
+        };
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(new GridAutoFitLayoutManager(getContext(), view.getWidth()));
+
+        recyclerView.setAdapter(adapter);
         return view;
 
 
@@ -121,27 +144,8 @@ public class User extends Fragment {
                     }
                 }
             });
-            Query query = ff.collection("Users").document(userId).collection("Posts");
 
-            FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
 
-            adapter = new FirestoreRecyclerAdapter<Post, PostViewHolder>(options) {
-                @Override
-                protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post model) {
-//                Glide.with(view).load(model.getImageUrl()).into(holder.imageView);
-                    Log.d(TAG, "onBindViewHolder: " + position);
-                    holder.imageView.setImageResource(R.drawable.coder);
-                }
-
-                @NonNull
-                @Override
-                public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                    View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
-                    return new PostViewHolder(view1);
-                }
-            };
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
     };
 
@@ -192,5 +196,17 @@ public class User extends Fragment {
             }
         });
         bottomSheetDialog.show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }
