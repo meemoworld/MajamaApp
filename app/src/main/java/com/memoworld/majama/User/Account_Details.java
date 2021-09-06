@@ -58,7 +58,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -296,8 +295,6 @@ public class Account_Details extends AppCompatActivity {
             userAbout = null;
 
 
-
-
         userDetailsFirestore = new UserDetailsFirestore(userAbout, userFirstName, userLastName, null, userCity, username, birthday, Timestamp.now(), null);
 
         Thread detailUploadThread = new Thread(new Runnable() {
@@ -323,14 +320,18 @@ public class Account_Details extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             userImageUrl = uri.toString();
-                                            Log.d(TAG, "run: Image Upload ended");
                                             firebaseFirestore.collection("Users").document(userId).update("profileImageUrl", userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d(TAG, "onSuccess: Image Url Updated");
                                                 }
                                             });
-
+                                            databaseReference.child(userId).child("personalInfo").child("profileImageUrl").setValue(userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "onSuccess: Uploading completed");
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -340,12 +341,10 @@ public class Account_Details extends AppCompatActivity {
         });
 
         detailUploadThread.start();
-        imageUploadThread.setPriority(2);
-        imageUploadThread.start();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UserDetailsRealtime userDetailsRealtime=new UserDetailsRealtime(birthday,userCity,userLastName);
+                UserDetailsRealtime userDetailsRealtime = new UserDetailsRealtime(birthday, userCity, userLastName, username, null);
                 databaseReference.child(userId).child("personalInfo").setValue(userDetailsRealtime).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -354,6 +353,9 @@ public class Account_Details extends AppCompatActivity {
                 });
             }
         }).start();
+        imageUploadThread.setPriority(2);
+        imageUploadThread.start();
+
 
         startActivity(new Intent(Account_Details.this, Interest.class));
         finish();

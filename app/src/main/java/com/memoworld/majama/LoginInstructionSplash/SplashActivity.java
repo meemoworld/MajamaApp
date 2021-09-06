@@ -86,7 +86,7 @@ public class SplashActivity extends AppCompatActivity {
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             Log.d(TAG, "onSuccess: Document Snapshot");
                             if (documentSnapshot.exists()) {
-                                Log.d(TAG, "onSuccess: username mila");
+                                Log.d(TAG, "onSuccess: username got");
                                 String username = (String) documentSnapshot.get(mUser.getUid());
                                 if (username == null) {
                                     Log.d(TAG, "onSuccess: username was Null");
@@ -111,7 +111,7 @@ public class SplashActivity extends AppCompatActivity {
                                     });
                                 }
                             } else {
-                                Log.d(TAG, "onSuccess: kuch exist hi nhi krta");
+                                Log.d(TAG, "Nothing Exists: ");
                                 startActivity(new Intent(SplashActivity.this, UserNameInput.class));
                                 finish();
                             }

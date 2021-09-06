@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,22 +15,27 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.memoworld.majama.AllModals.UserDetailsFirestore;
+import com.memoworld.majama.AllModals.UserDetailsRealtime;
 import com.memoworld.majama.R;
 
 
 public class search_By_User extends Fragment {
 
+    private static final String TAG = "search_By_User";
     private RecyclerView recyclerView;
     private EditText searchBox;
-    private FirestoreRecyclerAdapter adapter;
+    private FirebaseRecyclerAdapter<UserDetailsRealtime, UserViewHolder> adapter;
     private FirebaseFirestore ff = FirebaseFirestore.getInstance();
     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
     public search_By_User() {
         // Required empty public constructor
@@ -50,7 +54,7 @@ public class search_By_User extends Fragment {
         searchBox = view.findViewById(R.id.edit_text_search_user);
         recyclerView = view.findViewById(R.id.recyclerView_search_by_user);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        LoadUsers("");
+        LoadUsers("", "");
 
 
         searchBox.addTextChangedListener(new TextWatcher() {
@@ -61,13 +65,20 @@ public class search_By_User extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                LoadUsers(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().equals(""))
-                    LoadUsers("");
+//                Log.d(TAG, "afterTextChanged: " + s.toString());
+//                Query query = ff.collection("Users")
+//                        .orderBy("firstName", Query.Direction.ASCENDING)
+//                        .startAt("firstName", s.toString());
+//                FirestoreRecyclerOptions<UserDetailsFirestore> options1 = new FirestoreRecyclerOptions.Builder<UserDetailsFirestore>().setQuery(query, UserDetailsFirestore.class).build();
+//                adapter.updateOptions(options1);
+//
+//                adapter.notifyDataSetChanged();
+//                recyclerView.notify();
+//                adapter.updateOptions(options);
             }
         });
         return view;
@@ -76,38 +87,30 @@ public class search_By_User extends Fragment {
     private class UserViewHolder extends RecyclerView.ViewHolder {
         //        private CircleImageView profileImages;
         private TextView userName;
-        private RelativeLayout relativeLayout;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.page_name_single_view);
-            relativeLayout = itemView.findViewById(R.id.relative_layout_single_view);
         }
     }
 
-    public void LoadUsers(String s) {
-        Query query = ff.collection("Users")
-                .orderBy("firstName")
-                .startAt(s).endAt(s + "\uf8ff");
-        FirestoreRecyclerOptions<UserDetailsFirestore> options = new FirestoreRecyclerOptions.Builder<UserDetailsFirestore>().setQuery(query, UserDetailsFirestore.class).build();
-        adapter = new FirestoreRecyclerAdapter<UserDetailsFirestore, UserViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull UserDetailsFirestore model) {
-                String snapShotId = getSnapshots().getSnapshot(position).getId();
-                if (snapShotId.equals(userId)) {
-                    holder.itemView.setVisibility(View.GONE);
-                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                } else
-                    holder.userName.setText(model.getFirstName());
+    public void LoadUsers(String lower, String upper) {
 
+        Query query = databaseReference.orderByChild("personalInfo/username")
+                .startAt("").endAt("" + "\uf8ff");
+
+        FirebaseRecyclerOptions<UserDetailsRealtime> options = new FirebaseRecyclerOptions.Builder<UserDetailsRealtime>().setQuery(query, UserDetailsRealtime.class).build();
+        adapter = new FirebaseRecyclerAdapter<UserDetailsRealtime, UserViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull UserDetailsRealtime model) {
+                holder.userName.setText(model.getUsername());
             }
 
             @NonNull
             @Override
             public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.pages_single_item, parent, false);
-
-                return new UserViewHolder(view1);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pages_single_item, parent, false);
+                return new UserViewHolder(view);
             }
         };
         recyclerView.setAdapter(adapter);

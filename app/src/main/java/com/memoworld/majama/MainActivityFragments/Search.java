@@ -46,8 +46,8 @@ public class Search extends Fragment {
 
         viewPager2.setAdapter(adapter);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Pages"));
         tabLayout.addTab(tabLayout.newTab().setText("People"));
+        tabLayout.addTab(tabLayout.newTab().setText("Pages"));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

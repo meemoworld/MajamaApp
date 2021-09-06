@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,19 +15,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.memoworld.majama.MainActivity;
 import com.memoworld.majama.R;
-import com.memoworld.majama.User.Account_Details;
 import com.memoworld.majama.User.UserNameInput;
 
 public class NewLogin extends AppCompatActivity {
 
+
+    private FirebaseFirestore firebaseFirestore;
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -92,11 +95,29 @@ public class NewLogin extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(NewLogin.this, UserNameInput.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Toast.makeText(NewLogin.this, "There is Some Error in logging into Your account please try again later", Toast.LENGTH_SHORT).show();
+            mGoogleSignInClient.signOut();
+            firebaseFirestore.collection("AllNames").document("users").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        Log.d(TAG, "onSuccess: username got");
+                        String username = (String) documentSnapshot.get(user.getUid());
+                        if (username == null) {
+                            Log.d(TAG, "onSuccess: username was Null");
+                            startActivity(new Intent(NewLogin.this, UserNameInput.class));
+                            finish();
+                        } else {
+                            Intent intent = new Intent(NewLogin.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    } else {
+                        Intent intent = new Intent(NewLogin.this, UserNameInput.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            });
         }
 
     }
@@ -109,7 +130,7 @@ public class NewLogin extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(mAuth.getCurrentUser()!=null){
+        if (mAuth.getCurrentUser() != null) {
             updateUI(mAuth.getCurrentUser());
         }
     }

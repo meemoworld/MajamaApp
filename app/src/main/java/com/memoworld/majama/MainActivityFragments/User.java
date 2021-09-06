@@ -1,5 +1,6 @@
 package com.memoworld.majama.MainActivityFragments;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.memoworld.majama.AllModals.Post;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
-import com.memoworld.majama.GridAutoFitLayoutManager;
+import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class User extends Fragment {
             }
         };
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setLayoutManager(new GridAutoFitLayoutManager(getContext(), view.getWidth()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         recyclerView.setAdapter(adapter);
         return view;
@@ -136,11 +137,11 @@ public class User extends Fragment {
                         else
                             userAbout.setVisibility(View.INVISIBLE);
                         if (userDetailsFirestore.getFollowing() != null)
-                            followings.setText(userDetailsFirestore.getFollowing());
+                            followings.setText(String.valueOf(userDetailsFirestore.getFollowing()));
                         if (userDetailsFirestore.getFollowers() != null)
-                            followers.setText(userDetailsFirestore.getFollowers());
+                            followers.setText(String.valueOf(userDetailsFirestore.getFollowers()));
                         if (userDetailsFirestore.getBalance() != null)
-                            balance.setText(userDetailsFirestore.getBalance());
+                            balance.setText(String.valueOf(userDetailsFirestore.getBalance()));
                     }
                 }
             });
@@ -193,6 +194,16 @@ public class User extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "My pages Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        view.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent=new Intent(getContext(), NewLogin.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
         bottomSheetDialog.show();
