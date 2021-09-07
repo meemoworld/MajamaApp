@@ -3,6 +3,7 @@ package com.memoworld.majama.MainActivityFragments.SearchFragments;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.memoworld.majama.AllModals.UserDetailsRealtime;
+import com.memoworld.majama.AllModals.RealTimeUser;
 import com.memoworld.majama.R;
 
 
@@ -31,7 +32,7 @@ public class search_By_User extends Fragment {
     private static final String TAG = "search_By_User";
     private RecyclerView recyclerView;
     private EditText searchBox;
-    private FirebaseRecyclerAdapter<UserDetailsRealtime, UserViewHolder> adapter;
+    private FirebaseRecyclerAdapter<RealTimeUser, UserViewHolder> adapter;
     private FirebaseFirestore ff = FirebaseFirestore.getInstance();
     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -54,39 +55,36 @@ public class search_By_User extends Fragment {
         searchBox = view.findViewById(R.id.edit_text_search_user);
         recyclerView = view.findViewById(R.id.recyclerView_search_by_user);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        LoadUsers("", "");
+        LoadUsers();
 
 
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-//                Log.d(TAG, "afterTextChanged: " + s.toString());
-//                Query query = ff.collection("Users")
-//                        .orderBy("firstName", Query.Direction.ASCENDING)
-//                        .startAt("firstName", s.toString());
-//                FirestoreRecyclerOptions<UserDetailsFirestore> options1 = new FirestoreRecyclerOptions.Builder<UserDetailsFirestore>().setQuery(query, UserDetailsFirestore.class).build();
-//                adapter.updateOptions(options1);
-//
-//                adapter.notifyDataSetChanged();
-//                recyclerView.notify();
-//                adapter.updateOptions(options);
+                Log.d(TAG, "onTextChanged: " + s.toString());
+                Query query = databaseReference.orderByChild("username").startAt(s.toString()).endAt(s.toString() + "\uf8ff").limitToFirst(15);
+                FirebaseRecyclerOptions<RealTimeUser> options = new FirebaseRecyclerOptions.Builder<RealTimeUser>().setQuery(query, RealTimeUser.class).build();
+                adapter.updateOptions(options);
+                adapter.notifyDataSetChanged();
+                recyclerView.setAdapter(adapter);
+//                LoadUsers(s.toString());
             }
         });
         return view;
     }
 
-    private class UserViewHolder extends RecyclerView.ViewHolder {
+    private static class UserViewHolder extends RecyclerView.ViewHolder {
         //        private CircleImageView profileImages;
-        private TextView userName;
+        private final TextView userName;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -94,16 +92,20 @@ public class search_By_User extends Fragment {
         }
     }
 
-    public void LoadUsers(String lower, String upper) {
-
-        Query query = databaseReference.orderByChild("personalInfo/username")
-                .startAt("").endAt("" + "\uf8ff");
-
-        FirebaseRecyclerOptions<UserDetailsRealtime> options = new FirebaseRecyclerOptions.Builder<UserDetailsRealtime>().setQuery(query, UserDetailsRealtime.class).build();
-        adapter = new FirebaseRecyclerAdapter<UserDetailsRealtime, UserViewHolder>(options) {
+    public void LoadUsers() {
+        Query query = databaseReference.orderByChild("username").limitToFirst(15);
+        FirebaseRecyclerOptions<RealTimeUser> options = new FirebaseRecyclerOptions.Builder<RealTimeUser>().setQuery(query, RealTimeUser.class).build();
+        adapter = new FirebaseRecyclerAdapter<RealTimeUser, UserViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull UserDetailsRealtime model) {
-                holder.userName.setText(model.getUsername());
+            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull RealTimeUser model) {
+                String currentUserId = getSnapshots().getSnapshot(position).getKey();
+                Log.d(TAG, "onBindViewHolder: " + model.getUsername());
+                assert currentUserId != null;
+                if (currentUserId.equals(userId)) {
+                    holder.itemView.setVisibility(View.INVISIBLE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+                } else
+                    holder.userName.setText(model.getPersonalInfo().getUsername());
             }
 
             @NonNull

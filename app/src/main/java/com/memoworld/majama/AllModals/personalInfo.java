@@ -1,12 +1,12 @@
 package com.memoworld.majama.AllModals;
 
-public class UserDetailsRealtime {
+public class personalInfo {
     private String birthday, city, lastName, username, profileImageUrl;
 
-    public UserDetailsRealtime() {
+    public personalInfo() {
     }
 
-    public UserDetailsRealtime(String birthday, String city, String lastName, String username, String profileImageUrl) {
+    public personalInfo(String birthday, String city, String lastName, String username, String profileImageUrl) {
         this.birthday = birthday;
         this.city = city;
         this.lastName = lastName;

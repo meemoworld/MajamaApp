@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -83,6 +84,7 @@ public class NewLogin extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            firebaseFirestore=FirebaseFirestore.getInstance();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -105,17 +107,15 @@ public class NewLogin extends AppCompatActivity {
                         if (username == null) {
                             Log.d(TAG, "onSuccess: username was Null");
                             startActivity(new Intent(NewLogin.this, UserNameInput.class));
-                            finish();
                         } else {
                             Intent intent = new Intent(NewLogin.this, MainActivity.class);
                             startActivity(intent);
-                            finish();
                         }
                     } else {
                         Intent intent = new Intent(NewLogin.this, UserNameInput.class);
                         startActivity(intent);
-                        finish();
                     }
+                    finish();
                 }
             });
         }

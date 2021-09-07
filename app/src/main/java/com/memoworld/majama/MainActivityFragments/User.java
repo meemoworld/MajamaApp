@@ -69,6 +69,7 @@ public class User extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         initialize(view);
+        if(getActivity()!=null)
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         toolbar.inflateMenu(R.menu.user_fragment_menu);
         toolbar.setTitle("User");
@@ -203,7 +204,9 @@ public class User extends Fragment {
                 Intent intent=new Intent(getContext(), NewLogin.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                if(getActivity()!=null)
                 getActivity().finish();
+                bottomSheetDialog.dismiss();
             }
         });
         bottomSheetDialog.show();

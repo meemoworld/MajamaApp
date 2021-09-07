@@ -42,7 +42,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
-import com.memoworld.majama.AllModals.UserDetailsRealtime;
+import com.memoworld.majama.AllModals.personalInfo;
 import com.memoworld.majama.LoginInstructionSplash.login;
 import com.memoworld.majama.R;
 import com.memoworld.majama.User.Interest.Interest;
@@ -218,7 +218,6 @@ public class Account_Details extends AppCompatActivity {
         inputFirstName = findViewById(R.id.input_first_name_details);
         inputLastName = findViewById(R.id.input_last_name_details);
         inputAbout = findViewById(R.id.input_about_details);
-//        inputAge = findViewById(R.id.input_age_details);
         inputCity = findViewById(R.id.input_city_details);
         inputGender = findViewById(R.id.input_gender_details);
         button = findViewById(R.id.btn_continue_details);
@@ -256,12 +255,14 @@ public class Account_Details extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void Continue(View view) {
 
-        userFirstName = inputFirstName.getEditText().getText().toString().toLowerCase();
-        userLastName = inputLastName.getEditText().getText().toString().toLowerCase();
+        if (inputFirstName.getEditText() != null && inputLastName.getEditText() != null && inputCity.getEditText() != null && inputGender.getEditText() != null && inputAbout.getEditText() != null) {
+            userFirstName = inputFirstName.getEditText().getText().toString().toLowerCase();
+            userLastName = inputLastName.getEditText().getText().toString().toLowerCase();
 //        userAge = inputAge.getEditText().getText().toString();
-        userCity = inputCity.getEditText().getText().toString();
-        userGender = inputGender.getEditText().getText().toString();
-        userAbout = inputAbout.getEditText().getText().toString();
+            userCity = inputCity.getEditText().getText().toString();
+            userGender = inputGender.getEditText().getText().toString();
+            userAbout = inputAbout.getEditText().getText().toString();
+        }
 
         if (userFirstName.isEmpty()) {
             login.ShowError(inputFirstName, "Please Fill this field");
@@ -310,33 +311,31 @@ public class Account_Details extends AppCompatActivity {
             @Override
             public void run() {
                 Log.d(TAG, "run: Image Upload started");
-                storageReference.child(userId)
-                        .putFile(imageUri)
-                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    storageReference.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                storageReference.child(userId).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            storageReference.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    userImageUrl = uri.toString();
+                                    firebaseFirestore.collection("Users").document(userId).update("profileImageUrl", userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
-                                        public void onSuccess(Uri uri) {
-                                            userImageUrl = uri.toString();
-                                            firebaseFirestore.collection("Users").document(userId).update("profileImageUrl", userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "onSuccess: Image Url Updated");
-                                                }
-                                            });
-                                            databaseReference.child(userId).child("personalInfo").child("profileImageUrl").setValue(userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "onSuccess: Uploading completed");
-                                                }
-                                            });
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "onSuccess: Image Url Updated");
+                                        }
+                                    });
+                                    databaseReference.child(userId).child("personalInfo").child("profileImageUrl").setValue(userImageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "onSuccess: Uploading completed");
                                         }
                                     });
                                 }
-                            }
-                        });
+                            });
+                        }
+                    }
+                });
             }
         });
 
@@ -344,13 +343,15 @@ public class Account_Details extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UserDetailsRealtime userDetailsRealtime = new UserDetailsRealtime(birthday, userCity, userLastName, username, null);
-                databaseReference.child(userId).child("personalInfo").setValue(userDetailsRealtime).addOnSuccessListener(new OnSuccessListener<Void>() {
+                personalInfo personalInfo = new personalInfo(birthday, userCity, userLastName, username, null);
+                databaseReference.child(userId).child("personalInfo").setValue(personalInfo)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess: Realtime databases updated");
                     }
                 });
+                databaseReference.child(userId).child("username").setValue(username);
             }
         }).start();
         imageUploadThread.setPriority(2);
