@@ -27,7 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.memoworld.majama.AllModals.PageInfo;
+import com.memoworld.majama.AllModals.PageInfoFirestore;
+import com.memoworld.majama.AllModals.PageInfoRealTime;
 import com.memoworld.majama.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -45,8 +46,9 @@ public class CreatePage extends AppCompatActivity {
     private TextInputEditText pageName, pageAbout;
     private Uri imageUri;
     private String pageId, pageImageUrl, userId;
-    private PageInfo pageInfo;
+    private PageInfoFirestore pageInfoFirestore;
     private Map<String, Object> pageNameMap;
+   private PageInfoRealTime pageInfoRealTime;
 
     private final FirebaseFirestore ff = FirebaseFirestore.getInstance();
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -135,6 +137,8 @@ public class CreatePage extends AppCompatActivity {
         }
         pageId = autoIdGenerator();
         pageNameMap.put(pageId, pageNameString);
+
+
         new Thread(runnable).start();
 
         if (imageUri != null) {
@@ -153,10 +157,11 @@ public class CreatePage extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             pageImageUrl = uri.toString();
 
-                            pageInfo = new PageInfo(pageNameString, pageAboutString, pageImageUrl, Timestamp.now(),userId);
-                            database.getReference("Pages").child(pageId).setValue(pageInfo);
+                            pageInfoFirestore = new PageInfoFirestore(pageNameString, pageAboutString, pageImageUrl, Timestamp.now());
+                            pageInfoRealTime=new PageInfoRealTime(pageNameString,pageAboutString,pageImageUrl,userId,0);
+                            database.getReference("Pages").child(pageId).setValue(pageInfoRealTime);
 
-                            ff.collection("Users").document(userId).collection("Pages").document(pageId).set(pageInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            ff.collection("Users").document(userId).collection("Pages").document(pageId).set(pageInfoFirestore).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     pageImage.setImageResource(R.drawable.coder);
@@ -181,13 +186,14 @@ public class CreatePage extends AppCompatActivity {
                     progressDialog.setProgress((int) progress);
                 }
             });
-        }
-        else{
-            pageInfo = new PageInfo(pageNameString, pageAboutString, null, Timestamp.now(),userId);
+        } else {
 
-            database.getReference("Pages").child(pageId).setValue(pageInfo);
+            pageInfoFirestore = new PageInfoFirestore(pageNameString, pageAboutString, null, Timestamp.now());
+            pageInfoRealTime=new PageInfoRealTime(pageNameString,pageAboutString,null,userId,0);
 
-            ff.collection("Users").document(userId).collection("Pages").document(pageId).set(pageInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            database.getReference("Pages").child(pageId).setValue(pageInfoRealTime);
+
+            ff.collection("Users").document(userId).collection("Pages").document(pageId).set(pageInfoFirestore).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     pageImage.setImageResource(R.drawable.coder);

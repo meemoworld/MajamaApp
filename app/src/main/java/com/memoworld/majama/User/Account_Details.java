@@ -120,7 +120,7 @@ public class Account_Details extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(Account_Details.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        birthday = dayOfMonth + "/" + month + "/" + year;
+                        birthday = dayOfMonth + "/" + (month+1) + "/" + year;
 //                        birthday = SimpleDateFormat.getDateInstance().format(calendar.getTime());
                         btnDatePicker.setText(birthday);
 

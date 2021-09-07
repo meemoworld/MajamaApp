@@ -1,20 +1,18 @@
 package com.memoworld.majama.AllModals;
 
-import com.google.firebase.Timestamp;
-
-public class PageInfo {
+public class PageInfoRealTime {
     private String name,about,imageUrl,ownerUid;
-    Timestamp timestamp;
+    private Integer followers;
 
-    public PageInfo(String name, String about, String imageUrl,Timestamp timestamp,String ownerUid) {
+    public PageInfoRealTime(String name, String about, String imageUrl, String ownerUid, Integer followers) {
         this.name = name;
         this.about = about;
         this.imageUrl = imageUrl;
-        this.timestamp=timestamp;
-        this.ownerUid=ownerUid;
+        this.ownerUid = ownerUid;
+        this.followers = followers;
     }
 
-    public PageInfo() {
+    public PageInfoRealTime() {
     }
 
     public String getName() {
@@ -41,19 +39,19 @@ public class PageInfo {
         this.imageUrl = imageUrl;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public String getOwnerUid() {
         return ownerUid;
     }
 
     public void setOwnerUid(String ownerUid) {
         this.ownerUid = ownerUid;
+    }
+
+    public Integer getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Integer followers) {
+        this.followers = followers;
     }
 }

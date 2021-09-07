@@ -30,9 +30,9 @@
         <activity android:name=".User.pagesFollowed" />
         <activity android:name=".User.myPages" />
         <activity android:name=".Chats.sample_showUser" />
-        <activity android:name=".pages.visitingProfile" />
-        <activity android:name=".pages.visitingMyPages" />
-        <activity android:name=".pages.visitingPage" />
+        <activity android:name=".pages.VisitingProfile" />
+        <activity android:name=".pages.VisitingMyPage" />
+        <activity android:name=".pages.VisitingOtherPage" />
         <activity android:name=".User.Account_Details" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
