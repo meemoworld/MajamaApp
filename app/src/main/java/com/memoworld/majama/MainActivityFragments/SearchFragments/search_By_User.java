@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +26,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.memoworld.majama.AllModals.RealTimeUser;
 import com.memoworld.majama.R;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class search_By_User extends Fragment {
@@ -83,12 +86,13 @@ public class search_By_User extends Fragment {
     }
 
     private static class UserViewHolder extends RecyclerView.ViewHolder {
-        //        private CircleImageView profileImages;
+                private CircleImageView profileImage;
         private final TextView userName;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.page_name_single_view);
+            profileImage  =itemView.findViewById(R.id.page_image_single_view);
         }
     }
 
@@ -106,6 +110,7 @@ public class search_By_User extends Fragment {
                     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 } else
                     holder.userName.setText(model.getPersonalInfo().getUsername());
+                Glide.with(getContext()).load(model.getPersonalInfo().getProfileImageUrl()).circleCrop().placeholder(R.drawable.coder).into(holder.profileImage);
             }
 
             @NonNull

@@ -168,12 +168,26 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/upload_btn_my_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LinearLayout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="@color/black"
+        android:text="Upload"
+        android:onClick="UploadPost"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/LinearLayout"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/upload_btn_my_profile"
+        android:layout_marginTop="5dp"
         android:background="@color/black" />
 
     <androidx.recyclerview.widget.RecyclerView
