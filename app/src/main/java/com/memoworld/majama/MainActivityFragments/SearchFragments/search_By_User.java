@@ -1,5 +1,6 @@
 package com.memoworld.majama.MainActivityFragments.SearchFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +26,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.memoworld.majama.AllModals.RealTimeUser;
 import com.memoworld.majama.R;
+import com.memoworld.majama.Util.CustomLinearLayoutManager;
+import com.memoworld.majama.pages.VisitingProfile;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,7 +59,7 @@ public class search_By_User extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search__by__user, container, false);
         searchBox = view.findViewById(R.id.edit_text_search_user);
         recyclerView = view.findViewById(R.id.recyclerView_search_by_user);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
         LoadUsers();
 
 
@@ -86,13 +88,13 @@ public class search_By_User extends Fragment {
     }
 
     private static class UserViewHolder extends RecyclerView.ViewHolder {
-                private CircleImageView profileImage;
+        private CircleImageView profileImage;
         private final TextView userName;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.page_name_single_view);
-            profileImage  =itemView.findViewById(R.id.page_image_single_view);
+            profileImage = itemView.findViewById(R.id.page_image_single_view);
         }
     }
 
@@ -111,6 +113,15 @@ public class search_By_User extends Fragment {
                 } else
                     holder.userName.setText(model.getPersonalInfo().getUsername());
                 Glide.with(getContext()).load(model.getPersonalInfo().getProfileImageUrl()).circleCrop().placeholder(R.drawable.coder).into(holder.profileImage);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), VisitingProfile.class);
+                        intent.putExtra("profileId", currentUserId);
+                        startActivity(intent);
+                    }
+                });
             }
 
             @NonNull

@@ -14,11 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MainMajama">
         <activity android:name=".pages.ImagePost">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".pages.CreatePage"></activity>
 
@@ -44,10 +40,16 @@
         <activity android:name=".LoginInstructionSplash.SignUpActivity" />
         <activity android:name=".LoginInstructionSplash.login" />
         <activity android:name=".LoginInstructionSplash.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-            android:windowSoftInputMode="adjustPan"
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan">
+
         </activity>
     </application>
 

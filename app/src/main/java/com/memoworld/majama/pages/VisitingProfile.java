@@ -36,7 +36,7 @@ public class VisitingProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visiting_profile);
-        profileId = getIntent().getStringExtra("profileId");
+        profileId = getIntent().getExtras().getString("profileId");
         assert FirebaseAuth.getInstance().getCurrentUser() != null;
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -50,8 +50,8 @@ public class VisitingProfile extends AppCompatActivity {
                 Glide.with(VisitingProfile.this).load(userDetailsFirestore.getProfileImageUrl()).into(userProfileImage);
                 String name = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
                 username.setText(name);
-                followersCount.setText(userDetailsFirestore.getFollowers());
-                followingCount.setText(userDetailsFirestore.getFollowing());
+                followersCount.setText(String.valueOf(userDetailsFirestore.getFollowers()));
+                followingCount.setText(String.valueOf(userDetailsFirestore.getFollowing()));
                 about.setText(userDetailsFirestore.getAbout());
             }
         });

@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.memoworld.majama.AllModals.UserPageFollowing;
 import com.memoworld.majama.R;
+import com.memoworld.majama.Util.CustomGridLayoutManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -112,7 +112,8 @@ public class VisitingOtherPage extends AppCompatActivity {
         pageFollowers = findViewById(R.id.count_follower_visiting_page);
         followPage = findViewById(R.id.follow_btn_visiting_page);
         recyclerViewPagePost = findViewById(R.id.recycler_view_visiting_page);
-        recyclerViewPagePost.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerViewPagePost.setLayoutManager(new CustomGridLayoutManager(this, 3));
+//        recyclerViewPagePost.setLayoutManager(new GridLayoutManager(this, 3));
         aboutPage = findViewById(R.id.about_page_visiting_page);
     }
 

@@ -42,7 +42,7 @@ public class VisitingMyPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visiting_my_pages);
         initialize();
-        pageId = getIntent().getStringExtra("pageId");
+        pageId = getIntent().getExtras().getString("pageId");
         new Thread(runnable).start();
         assert auth.getCurrentUser() != null;
         userId = auth.getCurrentUser().getUid();

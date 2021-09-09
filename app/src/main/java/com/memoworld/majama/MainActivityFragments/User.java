@@ -3,21 +3,18 @@ package com.memoworld.majama.MainActivityFragments;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +32,8 @@ import com.memoworld.majama.AllModals.Post;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
+import com.memoworld.majama.User.myPages;
+import com.memoworld.majama.User.pagesFollowed;
 
 import java.util.ArrayList;
 
@@ -69,8 +68,8 @@ public class User extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         initialize(view);
-        if(getActivity()!=null)
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (getActivity() != null)
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         toolbar.inflateMenu(R.menu.user_fragment_menu);
         toolbar.setTitle("User");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
@@ -78,9 +77,12 @@ public class User extends Fragment {
 
         thread = new Thread(getData);
         thread.start();
-
 //        Query query = ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING);
+        return view;
 
+    }
+
+    public void LoadImages() {
         Query query = ff.collection("Users").document(userId).collection("Posts");
 
         FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
@@ -89,8 +91,8 @@ public class User extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post model) {
 //                Glide.with(view).load(model.getImageUrl()).into(holder.imageView);
-                Log.d(TAG, "onBindViewHolder: " + position);
-                holder.imageView.setImageResource(R.drawable.coder);
+//                Log.d(TAG, "onBindViewHolder: " + position);
+//                holder.imageView.setImageResource(R.drawable.coder);
             }
 
             @NonNull
@@ -101,25 +103,8 @@ public class User extends Fragment {
             }
         };
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         recyclerView.setAdapter(adapter);
-        return view;
-
-
-//            ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                @Override
-//                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                    if (error != null) {
-//                        Log.d(TAG, "onEvent: Failed");
-//                        return;
-//                    }
-//                    for (QueryDocumentSnapshot documentSnapshot : value) {
-//                        arrayList.add(documentSnapshot.toObject(Post.class));
-//                    }
-//                }
-//            });
-
     }
 
     Runnable getData = new Runnable() {
@@ -130,7 +115,8 @@ public class User extends Fragment {
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (value.exists()) {
                         userDetailsFirestore = value.toObject(UserDetailsFirestore.class);
-                        Glide.with(getContext()).load(userDetailsFirestore.getProfileImageUrl()).into(userImage);
+                        Glide.with(getContext()).load(userDetailsFirestore.getProfileImageUrl()).placeholder(R.drawable.account_circle).into(userImage);
+
                         String userFinalName = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
                         userName.setText(userFinalName);
                         if (userAbout != null)
@@ -146,8 +132,6 @@ public class User extends Fragment {
                     }
                 }
             });
-
-
         }
     };
 
@@ -162,6 +146,8 @@ public class User extends Fragment {
         balance = view.findViewById(R.id.balance_user_fragment);
         recyclerView = view.findViewById(R.id.recycler_view_user_fragment);
         toolbar = view.findViewById(R.id.main_appBar_user);
+//        recyclerView.setLayoutManager(new CustomGridLayoutManager(getContext(), 3));
+
     }
 
     private static class PostViewHolder extends RecyclerView.ViewHolder {
@@ -190,37 +176,51 @@ public class User extends Fragment {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.activity_user_settting, getView().findViewById(R.id.bottom_sheet));
 
+        // MY PAGES
         bottomSheetDialog.setContentView(view);
         view.findViewById(R.id.myPages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "My pages Clicked", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+                startActivity(new Intent(getContext(), myPages.class));
             }
         });
+
+        // LOGOUT button
         view.findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Intent intent=new Intent(getContext(), NewLogin.class);
+                Intent intent = new Intent(getContext(), NewLogin.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                if(getActivity()!=null)
-                getActivity().finish();
+                if (getActivity() != null)
+                    getActivity().finish();
                 bottomSheetDialog.dismiss();
             }
         });
+
+        // PAGES FOLLOWED
+        view.findViewById(R.id.pages).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+                startActivity(new Intent(getContext(), pagesFollowed.class));
+            }
+        });
+
         bottomSheetDialog.show();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
+//        adapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+//        adapter.stopListening();
     }
 }

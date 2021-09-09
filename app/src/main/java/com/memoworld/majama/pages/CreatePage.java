@@ -48,7 +48,7 @@ public class CreatePage extends AppCompatActivity {
     private String pageId, pageImageUrl, userId;
     private PageInfoFirestore pageInfoFirestore;
     private Map<String, Object> pageNameMap;
-   private PageInfoRealTime pageInfoRealTime;
+    private PageInfoRealTime pageInfoRealTime;
 
     private final FirebaseFirestore ff = FirebaseFirestore.getInstance();
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -143,6 +143,7 @@ public class CreatePage extends AppCompatActivity {
 
         if (imageUri != null) {
             ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setProgressStyle(R.style.Widget_MaterialComponents_CircularProgressIndicator);
             progressDialog.setMessage("Uploading your information.....");
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
@@ -158,7 +159,7 @@ public class CreatePage extends AppCompatActivity {
                             pageImageUrl = uri.toString();
 
                             pageInfoFirestore = new PageInfoFirestore(pageNameString, pageAboutString, pageImageUrl, Timestamp.now());
-                            pageInfoRealTime=new PageInfoRealTime(pageNameString,pageAboutString,pageImageUrl,userId,0);
+                            pageInfoRealTime = new PageInfoRealTime(pageNameString, pageAboutString, pageImageUrl, userId, 0);
                             database.getReference("Pages").child(pageId).setValue(pageInfoRealTime);
 
                             ff.collection("Users").document(userId).collection("Pages").document(pageId).set(pageInfoFirestore).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -189,7 +190,7 @@ public class CreatePage extends AppCompatActivity {
         } else {
 
             pageInfoFirestore = new PageInfoFirestore(pageNameString, pageAboutString, null, Timestamp.now());
-            pageInfoRealTime=new PageInfoRealTime(pageNameString,pageAboutString,null,userId,0);
+            pageInfoRealTime = new PageInfoRealTime(pageNameString, pageAboutString, null, userId, 0);
 
             database.getReference("Pages").child(pageId).setValue(pageInfoRealTime);
 

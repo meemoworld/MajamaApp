@@ -19,7 +19,8 @@
         android:ems="10"
         android:hint="@string/enter_tag_to_search"
         android:inputType="textPersonName"
-        android:padding="4dp" />
+        android:padding="4dp"
+        android:autofillHints="" />
 
     <View
         android:id="@+id/line"
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/line"
         android:layout_marginTop="4dp"
-        android:id="@+id/recyclerView"
+        android:id="@+id/recycler_view_my_pages"
         android:layout_marginBottom="70dp"
         tools:listitem="@layout/pages_single_item">
 
@@ -51,6 +52,7 @@
         android:backgroundTint="@color/black"
         android:layout_marginBottom="10dp"
         android:text="Create New Page"
+        android:onClick="CreateNewPage"
         android:textAllCaps="false"
         android:textColor="@color/white"
         />

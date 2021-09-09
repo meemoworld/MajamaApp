@@ -20,7 +20,7 @@
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:drawableEndCompat="@drawable/keyboard_arrow_right"
         app:drawableStartCompat="@drawable/pages">
 
     </TextView>
@@ -47,7 +47,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:drawableStartCompat="@drawable/user"
-        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
+        app:drawableEndCompat="@drawable/keyboard_arrow_right">
 
     </TextView>
 
@@ -73,7 +73,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:drawableStartCompat="@drawable/lock"
-        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
+        app:drawableEndCompat="@drawable/keyboard_arrow_right">
 
     </TextView>
 
@@ -99,7 +99,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:drawableStartCompat="@drawable/help"
-        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
+        app:drawableEndCompat="@drawable/keyboard_arrow_right">
 
     </TextView>
 
@@ -125,7 +125,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:drawableStartCompat="@drawable/withdraw"
-        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
+        app:drawableEndCompat="@drawable/keyboard_arrow_right">
 
     </TextView>
 
@@ -151,7 +151,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:drawableStartCompat="@drawable/pages"
-        app:drawableEndCompat="@drawable/ic_baseline_keyboard_arrow_right_24">
+        app:drawableEndCompat="@drawable/keyboard_arrow_right">
 
     </TextView>
 
