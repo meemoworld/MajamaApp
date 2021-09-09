@@ -178,7 +178,6 @@
         android:layout_marginRight="10dp"
         android:backgroundTint="@color/black"
         android:text="Upload"
-        android:onClick="UploadPost"
         android:textAllCaps="false"
         android:textColor="@color/white" />
 

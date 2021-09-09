@@ -59,6 +59,8 @@ public class search_By_User extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search__by__user, container, false);
         searchBox = view.findViewById(R.id.edit_text_search_user);
         recyclerView = view.findViewById(R.id.recyclerView_search_by_user);
+        if (adapter != null)
+            adapter.startListening();
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
         LoadUsers();
 
@@ -131,13 +133,13 @@ public class search_By_User extends Fragment {
                 return new UserViewHolder(view);
             }
         };
+        adapter.startListening();
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
     }
 
     @Override

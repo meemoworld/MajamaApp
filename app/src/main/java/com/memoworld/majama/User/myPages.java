@@ -2,6 +2,7 @@ package com.memoworld.majama.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +44,9 @@ public class myPages extends AppCompatActivity {
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(this));
         userid = auth.getCurrentUser().getUid();
         new Thread(runnable).start();
+        Log.d(TAG, "onCreate: called ");
+        if (adapter != null)
+            adapter.startListening();
     }
 
     public void CreateNewPage(View view) {
@@ -53,12 +56,13 @@ public class myPages extends AppCompatActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            Log.d(TAG, "run: Runnable Executed");
             Query query = ff.collection("Users").document(userid).collection("Pages").orderBy("timestamp", Query.Direction.DESCENDING);
             FirestoreRecyclerOptions<PageInfoFirestore> options = new FirestoreRecyclerOptions.Builder<PageInfoFirestore>().setQuery(query, PageInfoFirestore.class).build();
             adapter = new FirestoreRecyclerAdapter<PageInfoFirestore, UserPagesViewHolder>(options) {
                 @Override
                 protected void onBindViewHolder(@NonNull UserPagesViewHolder holder, int position, @NonNull PageInfoFirestore model) {
-//                    Log.d(TAG, "onBindViewHolder: "+position);
+                    Log.d(TAG, "onBindViewHolder: " + position);
                     String pageId = getSnapshots().getSnapshot(position).getId();
                     if (model.getImageUrl() != null)
                         Glide.with(myPages.this).load(model.getImageUrl()).placeholder(R.drawable.user).into(holder.profileImage);
@@ -80,6 +84,7 @@ public class myPages extends AppCompatActivity {
                     return new UserPagesViewHolder(view);
                 }
             };
+            adapter.startListening();
             recyclerView.setAdapter(adapter);
         }
     };
@@ -98,12 +103,19 @@ public class myPages extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+        Log.d(TAG, "onStart: Activity started");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: Activity paused");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop: Activity stopped");
         adapter.stopListening();
     }
 }

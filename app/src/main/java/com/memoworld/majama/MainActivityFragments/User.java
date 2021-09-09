@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import com.memoworld.majama.AllModals.Post;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
+import com.memoworld.majama.User.UserImagePost;
 import com.memoworld.majama.User.myPages;
 import com.memoworld.majama.User.pagesFollowed;
 
@@ -60,6 +62,7 @@ public class User extends Fragment {
     CircleImageView userImage;
     TextView userName, userAbout, followers, followings, balance;
     RecyclerView recyclerView;
+    Button uploadButton;
 
 
     @Override
@@ -78,6 +81,13 @@ public class User extends Fragment {
         thread = new Thread(getData);
         thread.start();
 //        Query query = ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING);
+
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), UserImagePost.class));
+            }
+        });
         return view;
 
     }
@@ -146,6 +156,7 @@ public class User extends Fragment {
         balance = view.findViewById(R.id.balance_user_fragment);
         recyclerView = view.findViewById(R.id.recycler_view_user_fragment);
         toolbar = view.findViewById(R.id.main_appBar_user);
+        uploadButton = view.findViewById(R.id.upload_btn_my_profile);
 //        recyclerView.setLayoutManager(new CustomGridLayoutManager(getContext(), 3));
 
     }

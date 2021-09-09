@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imagePostRelative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/imagePostRelative"
-    tools:context=".pages.ImagePost">
+    tools:context=".pages.PageImagePost">
 
     <include
         android:id="@+id/app_bar_upload_post"
@@ -14,73 +14,72 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView"
-        android:layout_width="150dp"
+    <ImageView
+        android:id="@+id/upload_image_view"
+        android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/coder"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/app_bar_upload_post"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:contentDescription="Upload Image"
+        android:src="@drawable/meme_template" />
 
     <TextView
+        android:id="@+id/tags_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tags_info"
-        android:layout_below="@+id/circleImageView"
-        android:textSize="14sp"
+        android:layout_below="@+id/upload_image_view"
         android:layout_margin="7dp"
-        android:text="How to use tags for maximum reach Click Here">
+        android:text="How to use tags for maximum reach Click Here"
+        android:textSize="14sp">
 
     </TextView>
-
-    <EditText
-        android:id="@+id/edit_text_search_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tags_info"
-
-        android:layout_marginLeft="7dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="9dp"
-        android:background="@drawable/tag_select_bg"
-        android:drawableStart="@drawable/ic_baseline_search_24"
-        android:drawablePadding="2dp"
-        android:ems="10"
-        android:hint="Search tags"
-        android:inputType="textPersonName"
-        android:padding="7dp" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/interest_chip_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_search_tag"
+        android:layout_below="@id/text_input_layout"
         android:layout_margin="5dp">
 
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_page_btn"
+        android:id="@+id/upload_image_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload"
-        app:cornerRadius="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="7dp"
         android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="Upload"
         android:textAllCaps="false"
-        />
+        app:cornerRadius="5dp" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tags_info"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="9dp"
+        android:drawablePadding="2dp"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:startIconDrawable="@drawable/ic_baseline_search_24">
 
-
-
-
-
-
-
+        <AutoCompleteTextView
+            android:id="@+id/edit_text_search_tag_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:completionThreshold="1"
+            android:hint="Search"
+            android:padding="7dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
 </RelativeLayout>
