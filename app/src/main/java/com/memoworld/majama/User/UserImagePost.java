@@ -29,6 +29,8 @@ import com.memoworld.majama.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.List;
+
 public class UserImagePost extends AppCompatActivity {
 
     private static final String TAG = "UserImagePost";

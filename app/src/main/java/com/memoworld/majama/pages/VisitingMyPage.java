@@ -1,10 +1,10 @@
 package com.memoworld.majama.pages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -94,6 +94,8 @@ public class VisitingMyPage extends AppCompatActivity {
     }
 
     public void UploadPost(View view) {
-        Toast.makeText(this, "Iski Activity bananai hai Fir intent laga dunga", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(VisitingMyPage.this, PageImagePost.class);
+        intent.putExtra("pageId", pageId);
+        startActivity(intent);
     }
 }
