@@ -47,6 +47,7 @@ public class VisitingProfile extends AppCompatActivity {
                     userDetailsFirestore = value.toObject(UserDetailsFirestore.class);
                 } else
                     userDetailsFirestore = new UserDetailsFirestore();
+
                 Glide.with(VisitingProfile.this).load(userDetailsFirestore.getProfileImageUrl()).into(userProfileImage);
                 String name = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
                 username.setText(name);

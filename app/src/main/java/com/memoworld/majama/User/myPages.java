@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.memoworld.majama.AllModals.PageInfoFirestore;
 import com.memoworld.majama.R;
+import com.memoworld.majama.Util.CustomLinearLayoutManager;
 import com.memoworld.majama.pages.CreatePage;
 import com.memoworld.majama.pages.VisitingMyPage;
 
@@ -40,7 +41,7 @@ public class myPages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_pages);
         recyclerView = findViewById(R.id.recycler_view_my_pages);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(this));
         userid = auth.getCurrentUser().getUid();
         new Thread(runnable).start();
     }

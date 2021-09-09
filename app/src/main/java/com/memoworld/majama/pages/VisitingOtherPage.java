@@ -6,11 +6,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,10 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.memoworld.majama.AllModals.UserPageFollowing;
 import com.memoworld.majama.R;
 import com.memoworld.majama.Util.CustomGridLayoutManager;
@@ -41,9 +39,9 @@ public class VisitingOtherPage extends AppCompatActivity {
     String pageId, ownerId, userId;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private UserPageFollowing userPageFollowing;
-    boolean originalState, newState;
+    private Long originalFollowers;
 
 
     @Override
@@ -64,6 +62,7 @@ public class VisitingOtherPage extends AppCompatActivity {
                     String about = String.valueOf(snapshot.child("about").getValue());
                     String name = String.valueOf(snapshot.child("name").getValue());
                     ownerId = String.valueOf(snapshot.child("ownerUid").getValue());
+                    originalFollowers = (Long) snapshot.child("followers").getValue();
                     String followersString = String.valueOf(snapshot.child("followers").getValue());
                     if (profileImageUrl.isEmpty()) {
                         Glide.with(VisitingOtherPage.this).load(profileImageUrl).into(pageProfileImage);
@@ -72,20 +71,23 @@ public class VisitingOtherPage extends AppCompatActivity {
                     aboutPage.setText(about);
                     pageFollowers.setText(followersString);
 
-                    firebaseFirestore.collection("Users").document(userId).collection("Followings").document("pages").addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    database.getReference().child("Users").child(userId).child("PageFollowing").child(pageId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                         @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (value != null) {
-                                userPageFollowing = value.toObject(UserPageFollowing.class);
-                            } else
-                                userPageFollowing = new UserPageFollowing();
-                            if (userPageFollowing != null && userPageFollowing.getFollowings().contains(pageId)) {
+                        public void onSuccess(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
                                 followPage.setText("Following");
+                                followPage.setClickable(true);
                             }
                         }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            followPage.setText("Follow");
+                            followPage.setClickable(true);
+                        }
                     });
+
                     new Thread(runnable).start();
-                    originalState = !followPage.getText().equals("Follow");
                     followPage.setClickable(true);
 
                 }
@@ -118,30 +120,32 @@ public class VisitingOtherPage extends AppCompatActivity {
     }
 
     public void FollowClick(View view) {
+
+        followPage.setClickable(false);
         Map<String, Object> updates = new HashMap<>();
         // Setting state of button as false for follow and true for following
+        boolean originalState = !followPage.getText().equals("Follow");
+
 
         if (originalState) {
             updates.put("followers", ServerValue.increment(-1));
-            database.getReference("Pages").child(pageId).updateChildren(updates);
-            originalState = true;
-            if (userPageFollowing != null)
-                userPageFollowing.getFollowings().remove(pageId);
+            database.getReference().child("Users").child(userId).child("PageFollowing").child(pageId).child(userId).removeValue();
             followPage.setText("Follow");
+            pageFollowers.setText(String.valueOf(originalFollowers - 1));
         } else {
             updates.put("followers", ServerValue.increment(1));
-            database.getReference("Pages").child(pageId).updateChildren(updates);
-            originalState = false;
-            if (userPageFollowing != null)
-                userPageFollowing.getFollowings().add(pageId);
+            Map<String, Object> nameUpdate = new HashMap<>();
+            nameUpdate.put(userId, true);
+            database.getReference().child("Users").child(userId).child("PageFollowing").child(pageId).updateChildren(nameUpdate);
+            pageFollowers.setText(String.valueOf(originalFollowers + 1));
             followPage.setText("Following");
         }
+
+        database.getReference("Pages").child(pageId).updateChildren(updates);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        firebaseFirestore.collection("Users").document(userId).collection("Followings").document("pages").update("followings", userPageFollowing.getFollowings());
-
     }
 }
