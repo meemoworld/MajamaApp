@@ -59,6 +59,7 @@ public class PageImagePost extends AppCompatActivity {
     Long followers;
     private ProgressDialog progressDialog;
     private static final String TAG = "PageImagePost";
+    Long priority = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +92,14 @@ public class PageImagePost extends AppCompatActivity {
         tagsList = new ArrayList<>();
         chipGroup = findViewById(R.id.interest_chip_group);
 
-
         new Thread(runnable).start();
+
+        database.getReference("Pages").child(pageId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                priority = (Long) dataSnapshot.child("priority").getValue();
+            }
+        });
 
 
     }
@@ -162,18 +169,22 @@ public class PageImagePost extends AppCompatActivity {
         });
 
         String time = String.valueOf(System.currentTimeMillis());
+
         tags.append(tagsList.get(0));
         for (int i = 1; i < tagsList.size(); i++) {
             tags.append(",");
             tags.append(tagsList.get(i));
         }
+
+
         storageReference.child(pageId).child(time).putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 storageReference.child(pageId).child(time).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        PagePostImageModal pagePostImageModal = new PagePostImageModal(pageId, uri.toString(), tags.toString(), followers.toString(), Timestamp.now());
+
+                        PagePostImageModal pagePostImageModal = new PagePostImageModal(pageId, uri.toString(), tags.toString(), followers.toString(), Timestamp.now(), priority);
                         PageImagePostFirestore pageImagePostFirestore = new PageImagePostFirestore(uri.toString(), Timestamp.now());
 
                         ff.collection("Users").document(userId).collection("Pages").document(pageId)
@@ -235,7 +246,7 @@ public class PageImagePost extends AppCompatActivity {
             Toast.makeText(this, "Already Selected...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (tagsList.size() > 30) {
+        if (tagsList.size() > 20) {
             Toast.makeText(this, "You have already selected maximum allowed tags", Toast.LENGTH_SHORT).show();
             return;
         }

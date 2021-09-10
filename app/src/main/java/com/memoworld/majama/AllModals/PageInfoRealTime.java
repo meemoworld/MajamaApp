@@ -2,7 +2,7 @@ package com.memoworld.majama.AllModals;
 
 public class PageInfoRealTime {
     private String name,about,imageUrl,ownerUid;
-    private Integer followers;
+    private Integer followers,priority;
 
     public PageInfoRealTime(String name, String about, String imageUrl, String ownerUid, Integer followers) {
         this.name = name;
@@ -10,6 +10,7 @@ public class PageInfoRealTime {
         this.imageUrl = imageUrl;
         this.ownerUid = ownerUid;
         this.followers = followers;
+        priority=0;
     }
 
     public PageInfoRealTime() {
@@ -53,5 +54,13 @@ public class PageInfoRealTime {
 
     public void setFollowers(Integer followers) {
         this.followers = followers;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }
