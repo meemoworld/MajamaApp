@@ -129,14 +129,14 @@ public class VisitingOtherPage extends AppCompatActivity {
 
         if (originalState) {
             updates.put("followers", ServerValue.increment(-1));
-            database.getReference().child("Users").child(userId).child("PageFollowing").child(pageId).child(userId).removeValue();
+            database.getReference().child("Users").child(userId).child("PageFollowing").child(pageId).removeValue();
             followPage.setText("Follow");
             pageFollowers.setText(String.valueOf(originalFollowers - 1));
         } else {
             updates.put("followers", ServerValue.increment(1));
             Map<String, Object> nameUpdate = new HashMap<>();
-            nameUpdate.put(userId, true);
-            database.getReference().child("Users").child(userId).child("PageFollowing").child(pageId).updateChildren(nameUpdate);
+            nameUpdate.put(pageId, true);
+            database.getReference().child("Users").child(userId).child("PageFollowing").updateChildren(nameUpdate);
             pageFollowers.setText(String.valueOf(originalFollowers + 1));
             followPage.setText("Following");
         }

@@ -34,7 +34,7 @@ import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
 import com.memoworld.majama.User.UserImagePost;
-import com.memoworld.majama.User.myPages;
+import com.memoworld.majama.User.Mypages;
 import com.memoworld.majama.User.pagesFollowed;
 
 import java.util.ArrayList;
@@ -193,7 +193,7 @@ public class User extends Fragment {
             @Override
             public void onClick(View v) {
                 bottomSheetDialog.dismiss();
-                startActivity(new Intent(getContext(), myPages.class));
+                startActivity(new Intent(getContext(), Mypages.class));
             }
         });
 
