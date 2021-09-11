@@ -30,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 import com.memoworld.majama.AllModals.PageInfoFirestore;
 import com.memoworld.majama.AllModals.PageInfoRealTime;
 import com.memoworld.majama.R;
+import com.memoworld.majama.User.Mypages;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -169,6 +170,8 @@ public class CreatePage extends AppCompatActivity {
                                     pageName.setText("");
                                     pageAbout.setText("");
                                     progressDialog.dismiss();
+                                    startActivity(new Intent(CreatePage.this, Mypages.class));
+                                    finish();
                                 }
                             });
                         }

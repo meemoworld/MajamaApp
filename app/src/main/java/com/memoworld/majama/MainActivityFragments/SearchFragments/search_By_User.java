@@ -62,6 +62,7 @@ public class search_By_User extends Fragment {
         if (adapter != null)
             adapter.startListening();
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
         LoadUsers();
 
 
