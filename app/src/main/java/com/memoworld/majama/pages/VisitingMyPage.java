@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ public class VisitingMyPage extends AppCompatActivity {
     private RecyclerView recyclerViewPagePost;
     private Button upload;
     String pageId, userId;
+    private Toolbar toolbar;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -57,6 +59,8 @@ public class VisitingMyPage extends AppCompatActivity {
                 pageName.setText(pageInfoFirestore.getName());
                 balance.setText(String.valueOf(pageInfoFirestore.getBalancing()));
                 aboutPage.setText(pageInfoFirestore.getAbout());
+                toolbar.setTitle(pageInfoFirestore.getName());
+                toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
             }
         });
@@ -91,6 +95,7 @@ public class VisitingMyPage extends AppCompatActivity {
         followers = findViewById(R.id.count_follower_visiting_my_page);
         recyclerViewPagePost = findViewById(R.id.recycler_view_visiting_my_page);
         upload = findViewById(R.id.upload_btn_my_page);
+        toolbar = findViewById(R.id.app_bar_visiting_pages);
     }
 
     public void UploadPost(View view) {

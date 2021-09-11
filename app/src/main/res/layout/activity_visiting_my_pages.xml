@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".pages.VisitingMyPage">
 
+    <include
+        android:id="@+id/app_bar_visiting_pages"
+        layout="@layout/custom_layout" />
+
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/app_bar_visiting_pages"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
