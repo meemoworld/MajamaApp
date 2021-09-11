@@ -203,6 +203,8 @@ public class CreatePage extends AppCompatActivity {
                     pageImage.setImageResource(R.drawable.coder);
                     pageName.setText("");
                     pageAbout.setText("");
+                    startActivity(new Intent(CreatePage.this, Mypages.class));
+                    finish();
                 }
             });
         }

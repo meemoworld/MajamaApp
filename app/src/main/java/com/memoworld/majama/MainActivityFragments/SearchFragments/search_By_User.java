@@ -62,7 +62,6 @@ public class search_By_User extends Fragment {
         if (adapter != null)
             adapter.startListening();
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
         LoadUsers();
 
 
@@ -83,6 +82,7 @@ public class search_By_User extends Fragment {
                 FirebaseRecyclerOptions<RealTimeUser> options = new FirebaseRecyclerOptions.Builder<RealTimeUser>().setQuery(query, RealTimeUser.class).build();
                 adapter.updateOptions(options);
                 adapter.notifyDataSetChanged();
+                adapter.startListening();
                 recyclerView.setAdapter(adapter);
 //                LoadUsers(s.toString());
             }

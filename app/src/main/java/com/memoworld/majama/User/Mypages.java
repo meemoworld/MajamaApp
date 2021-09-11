@@ -106,7 +106,7 @@ public class Mypages extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: Activity started");
-//        adapter.startListening();
+        adapter.startListening();
     }
 
     @Override

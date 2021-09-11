@@ -52,7 +52,6 @@ public class searchByPages extends Fragment {
         searchBox = view.findViewById(R.id.edit_text_search_pages);
         recyclerView = view.findViewById(R.id.recycler_view_pages_search);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
         if(adapter!=null)
             adapter.startListening();
         LoadUsers();
@@ -70,6 +69,7 @@ public class searchByPages extends Fragment {
                 FirebaseRecyclerOptions<PageInfoRealTime> options = new FirebaseRecyclerOptions.Builder<PageInfoRealTime>().setQuery(query, PageInfoRealTime.class).build();
                 adapter.updateOptions(options);
                 adapter.notifyDataSetChanged();
+                adapter.startListening();
                 recyclerView.setAdapter(adapter);
 
             }
