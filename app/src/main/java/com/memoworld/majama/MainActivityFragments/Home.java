@@ -2,12 +2,6 @@ package com.memoworld.majama.MainActivityFragments;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,8 +11,17 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.collection.LLRBNode;
-import com.google.type.Color;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.memoworld.majama.R;
 
@@ -27,41 +30,46 @@ import java.util.List;
 
 public class Home extends Fragment {
 
-    public Home() {
-        // Required empty public constructor
-    }
+    private static final String TAG = "Home";
     private arrayAdapter adapter;
     private int i;
     List<MainCardModel> al;
     SwipeFlingAdapterView flingContainer;
+
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
+    private final DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Pages");
+
+    public Home() {
+        // Required empty public constructor
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        flingContainer=view.findViewById(R.id.frame);
+        flingContainer = view.findViewById(R.id.frame);
         Toolbar toolbar = view.findViewById(R.id.main_appBar_home);
 
         toolbar.inflateMenu(R.menu.topbar_main_menu);
         toolbar.setTitle("Home");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
-//        AppCompatActivity compatActivity=(AppCompatActivity)getActivity();
-//        compatActivity.setSupportActionBar(toolbar);
-//        compatActivity.getSupportActionBar().setTitle("Home");
-//        compatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         al = new ArrayList<>();
+
         al.add(new MainCardModel("php"));
         al.add(new MainCardModel("c"));
-        al.add(new MainCardModel("python"));
-        al.add(new MainCardModel("java"));
-        al.add(new MainCardModel("javascript"));
-        al.add(new MainCardModel("css"));
-        al.add(new MainCardModel("html"));
+        LoadData();
+//        al.add(new MainCardModel("python"));
+//        al.add(new MainCardModel("java"));
+//        al.add(new MainCardModel("javascript"));
+//        al.add(new MainCardModel("css"));
+//        al.add(new MainCardModel("html"));
 
-        adapter = new arrayAdapter(getActivity(), R.layout.single_view_card,al);
+        adapter = new arrayAdapter(getActivity(), R.layout.single_view_card, al);
 
         flingContainer.setAdapter(adapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
@@ -105,11 +113,53 @@ public class Home extends Fragment {
 
         return view;
     }
+
+    public void LoadData() {
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String pageId = snapshot.child("pageId").getValue().toString();
+                databaseReference2.child(pageId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                    @Override
+                    public void onSuccess(DataSnapshot dataSnapshot) {
+                        String name=dataSnapshot.child("name").getValue().toString();
+                        Log.d(TAG, "onSuccess: "+name);
+
+                        al.add(new MainCardModel(name));
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
     public class arrayAdapter extends ArrayAdapter<MainCardModel> {
 
-        public arrayAdapter(@NonNull Context context, int resource,List<MainCardModel>items) {
-            super(context, resource,items);
+        public arrayAdapter(@NonNull Context context, int resource, List<MainCardModel> items) {
+            super(context, resource, items);
         }
+
         public View getView(int position, View convertView, ViewGroup parent) {
             MainCardModel card_item = getItem(position);
             if (convertView == null)
@@ -122,11 +172,12 @@ public class Home extends Fragment {
             return convertView;
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.chat_main_menu){
+        if (item.getItemId() == R.id.chat_main_menu) {
             Toast.makeText(getContext(), "In progress..", Toast.LENGTH_SHORT).show();
-            return  true;
+            return true;
         }
         return super.onOptionsItemSelected(item);
 

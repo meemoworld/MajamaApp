@@ -1,20 +1,16 @@
 package com.memoworld.majama.AllModals;
 
-import android.content.Intent;
-
-import androidx.annotation.IntegerRes;
-
 import com.google.firebase.Timestamp;
 
 public class PagePostImageModal {
 
-    String pageId, profileImageUrl, tags, currentFollowers;
+    String pageId, postImageUrl, tags, currentFollowers;
     Timestamp timestamp;
     Long likes, dislikes, priority;
 
-    public PagePostImageModal(String pageId, String profileImageUrl, String tags, String currentFollowers, Timestamp timestamp, Long priority) {
+    public PagePostImageModal(String pageId, String postImageUrl, String tags, String currentFollowers, Timestamp timestamp, Long priority) {
         this.pageId = pageId;
-        this.profileImageUrl = profileImageUrl;
+        this.postImageUrl = postImageUrl;
         this.tags = tags;
         this.currentFollowers = currentFollowers;
         this.timestamp = timestamp;
@@ -34,12 +30,12 @@ public class PagePostImageModal {
         this.pageId = pageId;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getPostImageUrl() {
+        return postImageUrl;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setPostImageUrl(String postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 
     public String getTags() {
