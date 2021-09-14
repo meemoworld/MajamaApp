@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.memoworld.majama.AllModals.Post;
+import com.memoworld.majama.AllModals.PostImage;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
@@ -52,7 +54,7 @@ public class User extends Fragment {
     private BottomSheetDialog bottomSheetDialog;
     Toolbar toolbar;
 
-    FirestoreRecyclerAdapter<Post, PostViewHolder> adapter;
+    FirestoreRecyclerAdapter<PostImage, MyViewHolder> adapter;
 
     public User() {
         // Required empty public constructor
@@ -88,6 +90,7 @@ public class User extends Fragment {
                 startActivity(new Intent(getContext(), UserImagePost.class));
             }
         });
+        LoadImages();
         return view;
 
     }
@@ -95,25 +98,25 @@ public class User extends Fragment {
     public void LoadImages() {
         Query query = ff.collection("Users").document(userId).collection("Posts");
 
-        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
+        FirestoreRecyclerOptions<PostImage> options = new FirestoreRecyclerOptions.Builder<PostImage>().setQuery(query, PostImage.class).build();
 
-        adapter = new FirestoreRecyclerAdapter<Post, PostViewHolder>(options) {
+        adapter = new FirestoreRecyclerAdapter<PostImage, MyViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post model) {
-//                Glide.with(view).load(model.getImageUrl()).into(holder.imageView);
+            protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull PostImage model) {
+                Glide.with(getContext()).load(model.getImageUrl()).placeholder(R.drawable.coder).into(holder.imageView);
 //                Log.d(TAG, "onBindViewHolder: " + position);
-//                holder.imageView.setImageResource(R.drawable.coder);
+                holder.imageView.setImageResource(R.drawable.coder);
             }
 
             @NonNull
             @Override
-            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
-                return new PostViewHolder(view1);
+                return new MyViewHolder(view1);
             }
         };
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        adapter.startListening();
         recyclerView.setAdapter(adapter);
     }
 
@@ -157,21 +160,11 @@ public class User extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_user_fragment);
         toolbar = view.findViewById(R.id.main_appBar_user);
         uploadButton = view.findViewById(R.id.upload_btn_my_profile);
-//        recyclerView.setLayoutManager(new CustomGridLayoutManager(getContext(), 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3,RecyclerView.VERTICAL,false));
 
     }
 
-    private static class PostViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView imageView;
-        private final ConstraintLayout layout1;
-
-        public PostViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.user_post_image_single_view);
-            layout1 = itemView.findViewById(R.id.layout_single_post_user);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -222,6 +215,14 @@ public class User extends Fragment {
 
         bottomSheetDialog.show();
     }
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.user_post_image_single_view);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -232,6 +233,6 @@ public class User extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-//        adapter.stopListening();
+        adapter.stopListening();
     }
 }

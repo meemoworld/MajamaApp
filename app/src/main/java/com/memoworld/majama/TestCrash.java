@@ -97,7 +97,7 @@ public class TestCrash extends AppCompatActivity {
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        ImageView imageView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

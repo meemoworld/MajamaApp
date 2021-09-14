@@ -1,15 +1,21 @@
 package com.memoworld.majama.pages;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,11 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.memoworld.majama.AllModals.PageImagePostFirestore;
 import com.memoworld.majama.AllModals.UserPageFollowing;
 import com.memoworld.majama.R;
-import com.memoworld.majama.Util.CustomGridLayoutManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +42,7 @@ public class VisitingOtherPage extends AppCompatActivity {
     private TextView pageName, pageFollowers, aboutPage;
     private Button followPage;
     private RecyclerView recyclerViewPagePost;
+    private FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder> adapter;
     String pageId, ownerId, userId;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -103,8 +110,26 @@ public class VisitingOtherPage extends AppCompatActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            // TODO:  FETCH IMAGES for RECYCLER IMAGES
-            CollectionReference collectionReference = FirebaseFirestore.getInstance().collection("Users").document(ownerId).collection("Pages").document(pageId).collection("PagePosts");
+
+            Query query = FirebaseFirestore.getInstance().collection("Users").document(ownerId).collection("Pages").document(pageId).collection("Posts");
+            FirestoreRecyclerOptions<PageImagePostFirestore> recyclerOptions = new FirestoreRecyclerOptions.Builder<PageImagePostFirestore>()
+                    .setQuery(query, PageImagePostFirestore.class).build();
+            adapter = new FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder>(recyclerOptions) {
+                @Override
+                protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull PageImagePostFirestore model) {
+                    Glide.with(VisitingOtherPage.this).load(model.getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
+                }
+
+                @NonNull
+                @Override
+                public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
+                    return new MyViewHolder(view);
+                }
+            };
+            adapter.startListening();
+            recyclerViewPagePost.setAdapter(adapter);
+
         }
     };
 
@@ -114,8 +139,8 @@ public class VisitingOtherPage extends AppCompatActivity {
         pageFollowers = findViewById(R.id.count_follower_visiting_page);
         followPage = findViewById(R.id.follow_btn_visiting_page);
         recyclerViewPagePost = findViewById(R.id.recycler_view_visiting_page);
-        recyclerViewPagePost.setLayoutManager(new CustomGridLayoutManager(this, 3));
-//        recyclerViewPagePost.setLayoutManager(new GridLayoutManager(this, 3));
+//        recyclerViewPagePost.setLayoutManager(new CustomGridLayoutManager(this, 3));
+        recyclerViewPagePost.setLayoutManager(new GridLayoutManager(this, 3, RecyclerView.VERTICAL, false));
         aboutPage = findViewById(R.id.about_page_visiting_page);
     }
 
@@ -144,8 +169,18 @@ public class VisitingOtherPage extends AppCompatActivity {
         database.getReference("Pages").child(pageId).updateChildren(updates);
     }
 
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.user_post_image_single_view);
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
+        adapter.stopListening();
     }
 }

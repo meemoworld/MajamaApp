@@ -36,8 +36,8 @@ public class Home extends Fragment {
     List<MainCardModel> al;
     SwipeFlingAdapterView flingContainer;
 
-    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
-    private final DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Pages");
+    private final DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("Posts");
+    private final DatabaseReference pageReference = FirebaseDatabase.getInstance().getReference().child("Pages");
 
     public Home() {
         // Required empty public constructor
@@ -115,11 +115,11 @@ public class Home extends Fragment {
     }
 
     public void LoadData() {
-        databaseReference.addChildEventListener(new ChildEventListener() {
+        postReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String pageId = snapshot.child("pageId").getValue().toString();
-                databaseReference2.child(pageId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                pageReference.child(pageId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                     @Override
                     public void onSuccess(DataSnapshot dataSnapshot) {
                         String name=dataSnapshot.child("name").getValue().toString();

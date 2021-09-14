@@ -2,15 +2,22 @@ package com.memoworld.majama.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +27,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.memoworld.majama.AllModals.PageImagePostFirestore;
 import com.memoworld.majama.AllModals.PageInfoFirestore;
 import com.memoworld.majama.R;
 
@@ -30,12 +39,13 @@ public class VisitingMyPage extends AppCompatActivity {
     private CircleImageView pageProfileImage;
     private TextView pageName, balance, aboutPage, followers;
     private RecyclerView recyclerViewPagePost;
-    private Button upload;
     String pageId, userId;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private PageInfoFirestore pageInfoFirestore;
+
+    private FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,7 @@ public class VisitingMyPage extends AppCompatActivity {
                 pageName.setText(pageInfoFirestore.getName());
                 balance.setText(String.valueOf(pageInfoFirestore.getBalancing()));
                 aboutPage.setText(pageInfoFirestore.getAbout());
+                new Thread(getRecyclerViewImages).start();
 
             }
         });
@@ -79,7 +90,29 @@ public class VisitingMyPage extends AppCompatActivity {
     Runnable getRecyclerViewImages = new Runnable() {
         @Override
         public void run() {
-            // TODO: FETCH IMAGES FROM FIRESTORE
+            Query query = firebaseFirestore.collection("Users")
+                    .document(userId)
+                    .collection("Pages")
+                    .document(pageId)
+                    .collection("Posts").orderBy("timestamp", Query.Direction.ASCENDING);
+            FirestoreRecyclerOptions<PageImagePostFirestore> recyclerOptions = new FirestoreRecyclerOptions.Builder<PageImagePostFirestore>()
+                    .setQuery(query, PageImagePostFirestore.class).build();
+
+            adapter = new FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder>(recyclerOptions) {
+                @Override
+                protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull PageImagePostFirestore model) {
+                    Glide.with(VisitingMyPage.this).load(model.getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
+                }
+
+                @NonNull
+                @Override
+                public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
+                    return new MyViewHolder(view);
+                }
+            };
+            adapter.startListening();
+            recyclerViewPagePost.setAdapter(adapter);
         }
     };
 
@@ -90,12 +123,36 @@ public class VisitingMyPage extends AppCompatActivity {
         aboutPage = findViewById(R.id.about_visiting_my_page);
         followers = findViewById(R.id.count_follower_visiting_my_page);
         recyclerViewPagePost = findViewById(R.id.recycler_view_visiting_my_page);
-        upload = findViewById(R.id.upload_btn_my_page);
+        recyclerViewPagePost.setLayoutManager(new GridLayoutManager(this, 3, RecyclerView.VERTICAL, false));
+        Button upload = findViewById(R.id.upload_btn_my_page);
     }
 
     public void UploadPost(View view) {
         Intent intent = new Intent(VisitingMyPage.this, PageImagePost.class);
         intent.putExtra("pageId", pageId);
+        intent.putExtra("pageImageUrl", pageInfoFirestore.getImageUrl());
+        intent.putExtra("pageName", pageInfoFirestore.getName());
         startActivity(intent);
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.user_post_image_single_view);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null)
+            adapter.stopListening();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 }
