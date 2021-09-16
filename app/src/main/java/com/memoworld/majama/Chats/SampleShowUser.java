@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.memoworld.majama.R;
 
-public class sample_showUser extends AppCompatActivity {
+public class SampleShowUser extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -99,7 +99,7 @@ public class searchByPages extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent;
-                        if (model.getOwnerUid().equals(userId)) {
+                        if (model.getOwnerUid().equals(userId)) {   
                             intent = new Intent(getContext(), VisitingMyPage.class);
                         } else {
                             intent = new Intent(getContext(), VisitingOtherPage.class);

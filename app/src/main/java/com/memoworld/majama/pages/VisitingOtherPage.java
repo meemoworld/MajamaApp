@@ -71,9 +71,9 @@ public class VisitingOtherPage extends AppCompatActivity {
                     ownerId = String.valueOf(snapshot.child("ownerUid").getValue());
                     originalFollowers = (Long) snapshot.child("followers").getValue();
                     String followersString = String.valueOf(snapshot.child("followers").getValue());
-                    if (profileImageUrl.isEmpty()) {
-                        Glide.with(VisitingOtherPage.this).load(profileImageUrl).into(pageProfileImage);
-                    }
+
+                    Glide.with(VisitingOtherPage.this).load(profileImageUrl).placeholder(R.drawable.user).into(pageProfileImage);
+
                     pageName.setText(name);
                     aboutPage.setText(about);
                     pageFollowers.setText(followersString);
@@ -94,7 +94,7 @@ public class VisitingOtherPage extends AppCompatActivity {
                         }
                     });
 
-                    new Thread(runnable).start();
+                    LoadData();
                     followPage.setClickable(true);
 
                 }
@@ -107,31 +107,26 @@ public class VisitingOtherPage extends AppCompatActivity {
         });
     }
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
+    public void LoadData() {
+        Query query = FirebaseFirestore.getInstance().collection("Users").document(ownerId).collection("Pages").document(pageId).collection("Posts");
+        FirestoreRecyclerOptions<PageImagePostFirestore> recyclerOptions = new FirestoreRecyclerOptions.Builder<PageImagePostFirestore>()
+                .setQuery(query, PageImagePostFirestore.class).build();
+        adapter = new FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder>(recyclerOptions) {
+            @Override
+            protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull PageImagePostFirestore model) {
+                Glide.with(VisitingOtherPage.this).load(model.getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
+            }
 
-            Query query = FirebaseFirestore.getInstance().collection("Users").document(ownerId).collection("Pages").document(pageId).collection("Posts");
-            FirestoreRecyclerOptions<PageImagePostFirestore> recyclerOptions = new FirestoreRecyclerOptions.Builder<PageImagePostFirestore>()
-                    .setQuery(query, PageImagePostFirestore.class).build();
-            adapter = new FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder>(recyclerOptions) {
-                @Override
-                protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull PageImagePostFirestore model) {
-                    Glide.with(VisitingOtherPage.this).load(model.getImageUrl()).placeholder(R.drawable.ruko_jara).into(holder.imageView);
-                }
-
-                @NonNull
-                @Override
-                public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
-                    return new MyViewHolder(view);
-                }
-            };
-            adapter.startListening();
-            recyclerViewPagePost.setAdapter(adapter);
-
-        }
-    };
+            @NonNull
+            @Override
+            public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_user_post_view, parent, false);
+                return new MyViewHolder(view);
+            }
+        };
+        adapter.startListening();
+        recyclerViewPagePost.setAdapter(adapter);
+    }
 
     private void initialize() {
         pageProfileImage = findViewById(R.id.image_view_visiting_page);
