@@ -94,7 +94,7 @@ public class CreatePage extends AppCompatActivity {
             imageUri = data.getData();
             CropImage.activity(imageUri)
                     .setAspectRatio(1, 1)
-                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setCropShape(CropImageView.CropShape.RECTANGLE)
                     .setMaxCropResultSize(4000, 4000)
                     .start(this);
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {

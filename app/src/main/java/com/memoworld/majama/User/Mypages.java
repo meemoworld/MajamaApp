@@ -42,12 +42,9 @@ public class Mypages extends AppCompatActivity {
         setContentView(R.layout.activity_my_pages);
         recyclerView = findViewById(R.id.recycler_view_my_pages);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
         userid = auth.getCurrentUser().getUid();
         Log.d(TAG, "onCreate: called ");
         LoadUsers();
-        if (adapter != null)
-            adapter.startListening();
     }
 
     private void LoadUsers() {
@@ -79,6 +76,7 @@ public class Mypages extends AppCompatActivity {
                 return new UserPagesViewHolder(view);
             }
         };
+        recyclerView.setHasFixedSize(true);
         adapter.startListening();
         recyclerView.setAdapter(adapter);
     }
@@ -121,4 +119,5 @@ public class Mypages extends AppCompatActivity {
         Log.d(TAG, "onStop: Activity stopped");
         adapter.stopListening();
     }
+
 }

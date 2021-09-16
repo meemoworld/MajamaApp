@@ -52,7 +52,7 @@ public class PageImagePost extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private List<String> tagsList;
     PagePostTags pagePostTags;
-    String pageId, userId;
+    String pageId, userId, pageImageUrl, pageName;
     StringBuilder tags;
     ImageView imageView;
     Uri imageUri;
@@ -71,6 +71,8 @@ public class PageImagePost extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
         pageId = getIntent().getExtras().getString("pageId");
+        pageImageUrl = getIntent().getExtras().getString("pageImageUrl");
+        pageName = getIntent().getExtras().getString("pageName");
         assert auth.getCurrentUser() != null;
         userId = auth.getCurrentUser().getUid();
         tags = new StringBuilder();
@@ -183,7 +185,7 @@ public class PageImagePost extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
 
-                        PagePostImageModal pagePostImageModal = new PagePostImageModal(pageId, uri.toString(), tags.toString(), followers.toString(), Timestamp.now(), priority);
+                        PagePostImageModal pagePostImageModal = new PagePostImageModal(pageId, uri.toString(), tags.toString(), followers.toString(), pageImageUrl, pageName, Timestamp.now(), 0L, 0L, 0L);
                         PageImagePostFirestore pageImagePostFirestore = new PageImagePostFirestore(uri.toString(), Timestamp.now());
 
                         ff.collection("Users").document(userId).collection("Pages").document(pageId)

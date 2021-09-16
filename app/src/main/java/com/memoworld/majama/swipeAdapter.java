@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class swipeAdapter extends RecyclerView.Adapter<swipeAdapter.swipeViewHolder>{
 
-    private Context context;
+    private final Context context;
     private ArrayList<String> name;
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 

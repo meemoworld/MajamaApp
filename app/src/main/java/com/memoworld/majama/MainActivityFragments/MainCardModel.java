@@ -2,6 +2,7 @@ package com.memoworld.majama.MainActivityFragments;
 
 public class MainCardModel {
     private String pageName;
+    private String postImageUrl;
 
     public MainCardModel(String pageName) {
         this.pageName = pageName;
