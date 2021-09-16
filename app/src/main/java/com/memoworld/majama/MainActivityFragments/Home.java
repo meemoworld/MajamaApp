@@ -1,6 +1,7 @@
 package com.memoworld.majama.MainActivityFragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.memoworld.majama.Chats.SampleShowUser;
 import com.memoworld.majama.R;
 
 import java.util.ArrayList;
@@ -122,8 +124,8 @@ public class Home extends Fragment {
                 pageReference.child(pageId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                     @Override
                     public void onSuccess(DataSnapshot dataSnapshot) {
-                        String name=dataSnapshot.child("name").getValue().toString();
-                        Log.d(TAG, "onSuccess: "+name);
+                        String name = dataSnapshot.child("name").getValue().toString();
+                        Log.d(TAG, "onSuccess: " + name);
 
                         al.add(new MainCardModel(name));
                         adapter.notifyDataSetChanged();
@@ -176,7 +178,7 @@ public class Home extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.chat_main_menu) {
-            Toast.makeText(getContext(), "In progress..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getContext(), SampleShowUser.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

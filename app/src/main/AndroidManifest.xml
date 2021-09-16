@@ -26,7 +26,7 @@
         <activity android:name=".TestCrash" />
         <activity android:name=".User.pagesFollowed" />
         <activity android:name=".User.Mypages" />
-        <activity android:name=".Chats.sample_showUser" />
+        <activity android:name=".Chats.SampleShowUser" />
         <activity android:name=".pages.VisitingProfile" />
         <activity android:name=".pages.VisitingMyPage" />
         <activity android:name=".pages.VisitingOtherPage" />
