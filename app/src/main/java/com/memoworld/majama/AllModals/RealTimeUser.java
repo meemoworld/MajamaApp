@@ -1,15 +1,15 @@
 package com.memoworld.majama.AllModals;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-public class RealTimeUser  {
+@IgnoreExtraProperties
+public class RealTimeUser {
     private String username;
     personalInfo personalInfo;
 
-    public RealTimeUser(com.memoworld.majama.AllModals.personalInfo personalInfo,String username) {
+    public RealTimeUser(com.memoworld.majama.AllModals.personalInfo personalInfo, String username) {
         this.personalInfo = personalInfo;
-        this.username=username;
+        this.username = username;
     }
 
     public String getUsername() {

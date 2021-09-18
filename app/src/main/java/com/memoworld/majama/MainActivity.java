@@ -1,10 +1,7 @@
 package com.memoworld.majama;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -16,6 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.memoworld.majama.MainActivityFragments.MainPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+
+    private long pressedTime = 0;
 
     ViewPager viewPager;
     BottomNavigationView bottomNavigationBar;
@@ -82,22 +81,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.topbar_main_menu, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.chat_main_menu:
-//                Toast.makeText(this, "Wait Chat is in production..😁", Toast.LENGTH_SHORT).show();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
+    }
 }

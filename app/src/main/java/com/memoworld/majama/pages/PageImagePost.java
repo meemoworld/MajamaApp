@@ -136,7 +136,7 @@ public class PageImagePost extends AppCompatActivity {
         if (requestCode == 101 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
             CropImage.activity(imageUri)
-                    .setAspectRatio(9, 16)
+                    .setAspectRatio(2, 3)
                     .setCropShape(CropImageView.CropShape.RECTANGLE)
                     .start(this);
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {

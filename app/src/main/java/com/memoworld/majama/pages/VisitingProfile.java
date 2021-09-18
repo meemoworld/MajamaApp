@@ -11,14 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +30,9 @@ import com.google.firebase.firestore.Query;
 import com.memoworld.majama.AllModals.PostImage;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,6 +48,7 @@ public class VisitingProfile extends AppCompatActivity {
 
     String profileId, userId;
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     UserDetailsFirestore userDetailsFirestore;
 
     @Override
@@ -74,10 +81,18 @@ public class VisitingProfile extends AppCompatActivity {
     Runnable followButtonCheck = new Runnable() {
         @Override
         public void run() {
-            firebaseFirestore.collection("Users").document(userId).collection("Followings").document("users").addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            database.getReference().child("Users").child(userId).child("UserFollowings").child(profileId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                 @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                public void onSuccess(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // TODO : USER IS FOLLOWING
+                    }
 
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // TODO: USER HAS TO FOLLOW
                 }
             });
         }
@@ -102,9 +117,42 @@ public class VisitingProfile extends AppCompatActivity {
                 }
             };
             adapter.startListening();
-            recyclerViewPost.setAdapter(adapter);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewPost.setAdapter(adapter);
+                }
+            });
+
         }
     };
+
+    public void FollowUser(View view) {
+        followButton.setClickable(false);
+        Map<String, Object> updates = new HashMap<>();
+        // Setting state of button as false for follow and true for following
+        boolean originalState = !followButton.getText().equals("Follow");
+/*
+
+        if (originalState) {
+            firebaseFirestore.collection("Users").document(userId).update("following", ServerValue.increment(-1));
+            firebaseFirestore.collection("Users").document(profileId).update("followers", ServerValue.increment(-1));
+            database.getReference().child("UserExtraDetails").child(userId).child("UserFollowings").child(profileId).removeValue();
+            database.getReference().child("UserExtraDetails").child(userId).child("UserFollowings").child(profileId).removeValue();
+            followButton.setText("Follow");
+        } else {
+//            updates.put("followers", ServerValue.increment(1));
+//            Map<String, Object> nameUpdate = new HashMap<>();
+//            nameUpdate.put(pageId, true);
+//            database.getReference().child("Users").child(userId).child("PageFollowing").updateChildren(nameUpdate);
+//            pageFollowers.setText(String.valueOf(originalFollowers + 1));
+//            followPage.setText("Following");
+        }
+
+
+ */
+//        database.getReference("Pages").child(pageId).updateChildren(updates);
+    }
 
     private void initialize() {
         username = findViewById(R.id.name_txt_box_visiting);

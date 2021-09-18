@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,8 +34,8 @@ import com.memoworld.majama.AllModals.PostImage;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.LoginInstructionSplash.NewLogin;
 import com.memoworld.majama.R;
-import com.memoworld.majama.User.UserImagePost;
 import com.memoworld.majama.User.Mypages;
+import com.memoworld.majama.User.UserImagePost;
 import com.memoworld.majama.User.pagesFollowed;
 
 import java.util.ArrayList;
@@ -118,6 +117,7 @@ public class User extends Fragment {
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.startListening();
         recyclerView.setAdapter(adapter);
+//        adapter.notifyDataSetChanged();
     }
 
     Runnable getData = new Runnable() {
@@ -132,7 +132,7 @@ public class User extends Fragment {
 
                         String userFinalName = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
                         userName.setText(userFinalName);
-                        if (userAbout != null)
+                        if (userDetailsFirestore.getAbout() != null)
                             userAbout.setText(userDetailsFirestore.getAbout());
                         else
                             userAbout.setVisibility(View.INVISIBLE);
@@ -160,10 +160,9 @@ public class User extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_user_fragment);
         toolbar = view.findViewById(R.id.main_appBar_user);
         uploadButton = view.findViewById(R.id.upload_btn_my_profile);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3,RecyclerView.VERTICAL,false));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3, RecyclerView.VERTICAL, false));
 
     }
-
 
 
     @Override
@@ -215,6 +214,7 @@ public class User extends Fragment {
 
         bottomSheetDialog.show();
     }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 

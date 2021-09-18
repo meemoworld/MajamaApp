@@ -59,9 +59,11 @@ public class search_By_User extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search__by__user, container, false);
         searchBox = view.findViewById(R.id.edit_text_search_user);
         recyclerView = view.findViewById(R.id.recyclerView_search_by_user);
+
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
+
         if (adapter != null)
             adapter.startListening();
-        recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
         LoadUsers();
 
 
@@ -108,7 +110,7 @@ public class search_By_User extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull RealTimeUser model) {
                 String currentUserId = getSnapshots().getSnapshot(position).getKey();
-                Log.d(TAG, "onBindViewHolder: " + model.getUsername());
+//                Log.d(TAG, "onBindViewHolder: " + model.getUsername());
                 assert currentUserId != null;
                 if (currentUserId.equals(userId)) {
                     holder.itemView.setVisibility(View.INVISIBLE);

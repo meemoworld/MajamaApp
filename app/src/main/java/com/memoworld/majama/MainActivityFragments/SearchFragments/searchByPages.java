@@ -52,7 +52,7 @@ public class searchByPages extends Fragment {
         searchBox = view.findViewById(R.id.edit_text_search_pages);
         recyclerView = view.findViewById(R.id.recycler_view_pages_search);
         recyclerView.setLayoutManager(new CustomLinearLayoutManager(getContext()));
-        if(adapter!=null)
+        if (adapter != null)
             adapter.startListening();
         LoadUsers();
 
@@ -99,7 +99,7 @@ public class searchByPages extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent;
-                        if (model.getOwnerUid().equals(userId)) {   
+                        if (model.getOwnerUid().equals(userId)) {
                             intent = new Intent(getContext(), VisitingMyPage.class);
                         } else {
                             intent = new Intent(getContext(), VisitingOtherPage.class);
@@ -118,6 +118,7 @@ public class searchByPages extends Fragment {
             }
         };
         adapter.startListening();
+        recyclerView.getRecycledViewPool().clear();
         recyclerView.setAdapter(adapter);
     }
 
@@ -135,6 +136,7 @@ public class searchByPages extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        adapter.startListening();
     }
 
     @Override

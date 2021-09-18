@@ -139,6 +139,7 @@
         android:layout_marginLeft="10dp"
         android:backgroundTint="@color/black"
         android:text="Follow"
+        android:onClick="FollowUser"
         android:textAllCaps="false"
         android:textColor="@color/white"
         />
