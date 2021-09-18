@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MainMajama">
-        <activity android:name=".User.UserImagePost"></activity>
-        <activity android:name=".pages.PageImagePost"></activity>
+        <activity android:name=".Chats.ChatMessaging" />
+        <activity android:name=".User.UserImagePost" />
+        <activity android:name=".pages.PageImagePost" />
         <activity android:name=".pages.CreatePage" />
 
         <meta-data
@@ -47,9 +48,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

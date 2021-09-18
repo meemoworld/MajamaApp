@@ -64,7 +64,7 @@ public class Home extends Fragment {
 
         al.add(new MainCardModel("php"));
         al.add(new MainCardModel("c"));
-        LoadData();
+        //LoadData();
 //        al.add(new MainCardModel("python"));
 //        al.add(new MainCardModel("java"));
 //        al.add(new MainCardModel("javascript"));

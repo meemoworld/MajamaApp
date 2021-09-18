@@ -8,7 +8,10 @@
 
     <include
         android:id="@+id/app_bar_visiting_pages"
-        layout="@layout/custom_layout" />
+        layout="@layout/custom_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
         android:id="@+id/linear"

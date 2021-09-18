@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +46,7 @@ public class VisitingProfile extends AppCompatActivity {
     private Button followButton;
     boolean isFollowing;
     FirestoreRecyclerAdapter<PostImage, MyViewHolder> adapter;
-
+    Toolbar toolbar;
     String profileId, userId;
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -59,6 +60,9 @@ public class VisitingProfile extends AppCompatActivity {
         assert FirebaseAuth.getInstance().getCurrentUser() != null;
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         new Thread(fetchImages).start();
+        toolbar.setTitle("Profile");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+
         firebaseFirestore.collection("Users").document(profileId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {

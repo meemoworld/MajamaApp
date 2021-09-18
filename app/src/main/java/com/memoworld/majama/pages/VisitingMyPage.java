@@ -50,7 +50,6 @@ public class VisitingMyPage extends AppCompatActivity {
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private PageInfoFirestore pageInfoFirestore;
-
     private FirestoreRecyclerAdapter<PageImagePostFirestore, MyViewHolder> adapter;
 
     @Override
@@ -62,6 +61,10 @@ public class VisitingMyPage extends AppCompatActivity {
         new Thread(runnable).start();
         assert auth.getCurrentUser() != null;
         userId = auth.getCurrentUser().getUid();
+
+        toolbar.setTitle("Page");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+
         firebaseFirestore.collection("Users").document(userId).collection("Pages").document(pageId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {

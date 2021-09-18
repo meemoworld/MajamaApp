@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +50,7 @@ public class VisitingOtherPage extends AppCompatActivity {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private UserPageFollowing userPageFollowing;
     private Long originalFollowers;
+    Toolbar toolbar;
 
 
     @Override
@@ -60,6 +62,9 @@ public class VisitingOtherPage extends AppCompatActivity {
         pageId = getIntent().getStringExtra("pageId");
         assert auth.getCurrentUser() != null;
         userId = auth.getCurrentUser().getUid();
+
+        toolbar.setTitle("Page");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         database.getReference("Pages").child(pageId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

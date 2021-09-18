@@ -6,33 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".User.pagesFollowed">
 
-    <EditText
-        android:id="@+id/edit_text_search_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/text_box_bg"
-        android:drawableStart="@drawable/ic_baseline_search_24"
-        android:drawablePadding="2dp"
-        android:ems="10"
-        android:hint="@string/enter_tag_to_search"
-        android:inputType="textPersonName"
-        android:padding="4dp" />
-
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/edit_text_search_tag"
-        android:layout_marginTop="10dp"
-        android:background="@color/black" />
+    <include
+        android:id="@+id/main_appBar_pagesFollowed"
+        layout="@layout/custom_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/line"
+        android:layout_below="@+id/main_appBar_pagesFollowed"
         android:layout_marginTop="10dp"
         android:id="@+id/recyclerView_pages_followed"
         tools:listitem="@layout/pages_single_item">

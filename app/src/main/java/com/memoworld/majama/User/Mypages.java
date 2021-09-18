@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class Mypages extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     String userid;
+    Toolbar toolbar;
     private FirebaseFirestore ff = FirebaseFirestore.getInstance();
     private FirestoreRecyclerAdapter<PageInfoFirestore, UserPagesViewHolder> adapter;
 
@@ -45,6 +47,9 @@ public class Mypages extends AppCompatActivity {
         userid = auth.getCurrentUser().getUid();
         Log.d(TAG, "onCreate: called ");
         LoadUsers();
+
+        toolbar.setTitle("My Pages");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }
 
     private void LoadUsers() {
