@@ -13,12 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
+import com.google.firebase.database.FirebaseDatabase;
+import com.memoworld.majama.AllModals.PagePostImageModal;
 import com.memoworld.majama.MainActivityFragments.MainPagerAdapter;
+import com.memoworld.majama.pages.PageImagePost;
 
 public class MainActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     BottomNavigationView bottomNavigationBar;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @SuppressLint("NonConstantResourceId")
         @Override
@@ -51,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
 
+        addVirtualData();
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -80,6 +87,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public int getRandom(){
+        return (int)(Math.random()*1000+1);
+    }
+
+    public void addVirtualData(){
+
+        for (int i=0;i<10;i++){
+            String time = String.valueOf(System.currentTimeMillis());
+            PagePostImageModal pagePostImageModal = new PagePostImageModal("asgf","post","dark", String.valueOf(getRandom()),"Image","abcd", Timestamp.now(),(long)getRandom(),(long)getRandom(),(long)(getRandom()%3));
+            firebaseDatabase.getReference("Posts").child(time).setValue(pagePostImageModal);
+        }
     }
 
 //    @Override
