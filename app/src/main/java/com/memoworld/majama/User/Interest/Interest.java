@@ -17,6 +17,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.memoworld.majama.AllModals.EachTag;
@@ -35,7 +36,7 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
     private ChipGroup chipGroup;
     private EditText userInput;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private Tag tag = new Tag();
     private ArrayList<EachTag> tagArrayList = new ArrayList<>();
     private List<String> userInterest;
@@ -143,10 +144,22 @@ public class Interest extends AppCompatActivity implements InterestTagItemListen
             Toast.makeText(this, "Please Select atleast 5 tags ", Toast.LENGTH_SHORT).show();
             return;
         }
+        int i = 0;
+        StringBuilder builder = new StringBuilder();
+        for (i = 0; i < userInterest.size() - 1; i++) {
+            builder.append(userInterest.get(i));
+            builder.append(",");
+        }
+        builder.append(userInterest.get(i));
+
+        Map<String, Object> interest = new HashMap<>();
+        interest.put("interest", builder);
+
         Thread updateInterest = new Thread(new Runnable() {
             @Override
             public void run() {
                 firebaseFirestore.collection("Users").document(mUser.getUid()).update("interest", userInterest);
+                database.getReference("Users").child(mUser.getUid()).child("personalInfo").updateChildren(interest);
             }
         });
         updateInterest.setPriority(1);
