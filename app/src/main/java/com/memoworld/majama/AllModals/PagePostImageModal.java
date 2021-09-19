@@ -4,18 +4,17 @@ import com.google.firebase.Timestamp;
 
 public class PagePostImageModal {
 
-    private String pageId, postImageUrl, tags, currentFollowers,pageImageUrl,pageName;
-    private Timestamp timestamp;
-    private Long likes, dislikes, priority;
+    private String pageId, postImageUrl, tags,pageImageUrl,pageName;
+    private Long likes, dislikes, priority,currentFollowers,second;
 
-    public PagePostImageModal(String pageId, String postImageUrl, String tags, String currentFollowers, String pageImageUrl, String pageName, Timestamp timestamp, Long likes, Long dislikes, Long priority) {
+    public PagePostImageModal(String pageId, String postImageUrl, String tags, Long currentFollowers, String pageImageUrl, String pageName, Long second, Long likes, Long dislikes, Long priority) {
         this.pageId = pageId;
         this.postImageUrl = postImageUrl;
         this.tags = tags;
         this.currentFollowers = currentFollowers;
         this.pageImageUrl = pageImageUrl;
         this.pageName = pageName;
-        this.timestamp = timestamp;
+        this.second = second;
         this.likes = likes;
         this.dislikes = dislikes;
         this.priority = priority;
@@ -48,20 +47,20 @@ public class PagePostImageModal {
         this.tags = tags;
     }
 
-    public String getCurrentFollowers() {
+    public Long getCurrentFollowers() {
         return currentFollowers;
     }
 
-    public void setCurrentFollowers(String currentFollowers) {
+    public void setCurrentFollowers(Long currentFollowers) {
         this.currentFollowers = currentFollowers;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Long getSecond() {
+        return second;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setSecond(Long second) {
+        this.second = second;
     }
 
     public Long getLikes() {

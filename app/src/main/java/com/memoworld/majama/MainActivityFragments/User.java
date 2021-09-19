@@ -39,6 +39,7 @@ import com.memoworld.majama.User.UserImagePost;
 import com.memoworld.majama.User.pagesFollowed;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,7 +48,7 @@ public class User extends Fragment {
     private static final String TAG = "Majama";
     FirebaseFirestore ff = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String userId = user.getUid();
+    String userId;
     Thread thread;
     ArrayList<Post> arrayList = new ArrayList<>();
     private BottomSheetDialog bottomSheetDialog;
@@ -78,7 +79,7 @@ public class User extends Fragment {
         toolbar.setTitle("User");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
-
+        userId = user.getUid();
         thread = new Thread(getData);
         thread.start();
 //        Query query = ff.collection("Users").document(userId).collection("Posts").orderBy("uploadTime", Query.Direction.DESCENDING);
@@ -126,10 +127,9 @@ public class User extends Fragment {
             ff.collection("Users").document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (value.exists()) {
+                    if (value != null && value.exists()) {
                         userDetailsFirestore = value.toObject(UserDetailsFirestore.class);
-                        Glide.with(getContext()).load(userDetailsFirestore.getProfileImageUrl()).placeholder(R.drawable.account_circle).into(userImage);
-
+                        Glide.with(Objects.requireNonNull(getContext())).load(userDetailsFirestore.getProfileImageUrl()).placeholder(R.drawable.account_circle).into(userImage);
                         String userFinalName = userDetailsFirestore.getFirstName() + " " + userDetailsFirestore.getLastName();
                         userName.setText(userFinalName);
                         if (userDetailsFirestore.getAbout() != null)

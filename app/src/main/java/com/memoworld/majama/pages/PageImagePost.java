@@ -185,7 +185,7 @@ public class PageImagePost extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
 
-                        PagePostImageModal pagePostImageModal = new PagePostImageModal(pageId, uri.toString(), tags.toString(), followers.toString(), pageImageUrl, pageName, Timestamp.now(), 0L, 0L, 0L);
+                        PagePostImageModal pagePostImageModal = new PagePostImageModal(pageId, uri.toString(), tags.toString(), followers, pageImageUrl, pageName, Timestamp.now().getSeconds(), 0L, 0L, 0L);
                         PageImagePostFirestore pageImagePostFirestore = new PageImagePostFirestore(uri.toString(), Timestamp.now());
 
                         ff.collection("Users").document(userId).collection("Pages").document(pageId)
