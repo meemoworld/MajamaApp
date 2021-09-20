@@ -11,13 +11,13 @@
         layout="@layout/custom_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linear"
-        android:layout_below="@+id/app_bar_visiting_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/app_bar_visiting_profile"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -139,18 +139,17 @@
 
     <Button
         android:id="@+id/follow_btn_visiting_profile"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/LinearLayout"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
         android:backgroundTint="@color/black"
-        android:text="Follow"
-        android:onClick="FollowUser"
+        android:onClick="sendRequest"
+        android:text="Send Friend Request"
         android:textAllCaps="false"
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white" />
 
     <View
         android:id="@+id/line"

@@ -1,17 +1,18 @@
 package com.memoworld.majama.pages;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -32,37 +34,45 @@ import com.memoworld.majama.AllModals.PostImage;
 import com.memoworld.majama.AllModals.UserDetailsFirestore;
 import com.memoworld.majama.R;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VisitingProfile extends AppCompatActivity {
 
 
+    private static final String TAG = "VisitingProfile";
     private CircleImageView userProfileImage;
     private TextView username, followersCount, followingCount, about;
     private RecyclerView recyclerViewPost;
     private Button followButton;
-    boolean isFollowing;
     FirestoreRecyclerAdapter<PostImage, MyViewHolder> adapter;
     Toolbar toolbar;
     String profileId, userId;
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     UserDetailsFirestore userDetailsFirestore;
+    private Integer state = 1;
+    String[] texts;
+    DatabaseReference reference;
+    DatabaseReference reference2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visiting_profile);
         profileId = getIntent().getExtras().getString("profileId");
+
+        initialize();
+
         assert FirebaseAuth.getInstance().getCurrentUser() != null;
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        reference2 = database.getReference().child("UserExtraDetails").child(profileId).child("UserToUserConnection");
+        reference = database.getReference().child("UserExtraDetails").child(userId).child("UserToUserConnection");
+
         new Thread(fetchImages).start();
         toolbar.setTitle("Profile");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-
+        new Thread(followButtonCheck).start();
         firebaseFirestore.collection("Users").document(profileId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -79,27 +89,52 @@ public class VisitingProfile extends AppCompatActivity {
                 about.setText(userDetailsFirestore.getAbout());
             }
         });
-        initialize();
+
     }
 
     Runnable followButtonCheck = new Runnable() {
         @Override
         public void run() {
-            database.getReference().child("Users").child(userId).child("UserFollowings").child(profileId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            reference.child("AllConnections").child(profileId).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                 @Override
                 public void onSuccess(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        // TODO : USER IS FOLLOWING
+                        Log.d(TAG, "onSuccess: SnapShotExist");
+                        String data = dataSnapshot.getValue().toString();
+                        Log.d(TAG, "onSuccess: " + data);
+                        if (data == null) {
+                            state = 1;
+                            return;
+                        }
+                        switch (data) {
+                            case "Friend":
+                                state = 2;
+                                followButton.setText(texts[1]);
+                                break;
+                            case "Request Sent":
+                                state = 3;
+                                followButton.setText(texts[2]);
+                                break;
+                            case "Request Pending":
+                                state = 4;
+                                followButton.setText(texts[3]);
+                                break;
+                            default:
+                                state = 1;
+                                break;
+                        }
                     }
-
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    // TODO: USER HAS TO FOLLOW
+                    Log.d(TAG, "onFailure: SnapShot Does not exists");
+                    state = 1;
                 }
             });
+            followButton.setClickable(true);
         }
+
     };
     Runnable fetchImages = new Runnable() {
         @Override
@@ -131,33 +166,6 @@ public class VisitingProfile extends AppCompatActivity {
         }
     };
 
-    public void FollowUser(View view) {
-        followButton.setClickable(false);
-        Map<String, Object> updates = new HashMap<>();
-        // Setting state of button as false for follow and true for following
-        boolean originalState = !followButton.getText().equals("Follow");
-/*
-
-        if (originalState) {
-            firebaseFirestore.collection("Users").document(userId).update("following", ServerValue.increment(-1));
-            firebaseFirestore.collection("Users").document(profileId).update("followers", ServerValue.increment(-1));
-            database.getReference().child("UserExtraDetails").child(userId).child("UserFollowings").child(profileId).removeValue();
-            database.getReference().child("UserExtraDetails").child(userId).child("UserFollowings").child(profileId).removeValue();
-            followButton.setText("Follow");
-        } else {
-//            updates.put("followers", ServerValue.increment(1));
-//            Map<String, Object> nameUpdate = new HashMap<>();
-//            nameUpdate.put(pageId, true);
-//            database.getReference().child("Users").child(userId).child("PageFollowing").updateChildren(nameUpdate);
-//            pageFollowers.setText(String.valueOf(originalFollowers + 1));
-//            followPage.setText("Following");
-        }
-
-
- */
-//        database.getReference("Pages").child(pageId).updateChildren(updates);
-    }
-
     private void initialize() {
         username = findViewById(R.id.name_txt_box_visiting);
         userProfileImage = findViewById(R.id.image_view_visiting_profile);
@@ -165,9 +173,72 @@ public class VisitingProfile extends AppCompatActivity {
         followersCount = findViewById(R.id.count_follower_visiting_profile);
         followingCount = findViewById(R.id.count_following_visiting_profile);
         recyclerViewPost = findViewById(R.id.recycler_view_visiting_profile_posts);
+        toolbar = findViewById(R.id.app_bar_visiting_profile);
         recyclerViewPost.setLayoutManager(new GridLayoutManager(this, 3, RecyclerView.VERTICAL, false));
         followButton = findViewById(R.id.follow_btn_visiting_profile);
 
+        texts = new String[]{"SEND FRIEND REQUEST", "UN FRIEND", "CANCEL REQUEST", "ACCEPT", "Friend", "Request Sent", "Request Pending"};
+
+    }
+
+    public void sendRequest(View view) {
+        /* state     Button TEXT
+            1        SEND FRIEND REQUEST
+            2        UN FRIEND
+            3        CANCEL FRIEND REQUEST
+            4        ACCEPT FRIEND REQUEST
+         */
+        followButton.setClickable(false);
+        switch (state) {
+            case 1:
+                followButton.setText(texts[2]);
+                sendFriendRequest();
+                break;
+            case 2:
+                followButton.setText(texts[0]);
+                unFriendAUser();
+                break;
+            case 3:
+                followButton.setText(texts[0]);
+                cancelSentRequest();
+                break;
+            case 4:
+                followButton.setText(texts[1]);
+                acceptFriendRequest();
+        }
+    }
+
+    private void acceptFriendRequest() {
+        reference.child("Pending_Request").child(profileId).removeValue();
+        reference.child("AllConnections").child(profileId).setValue(texts[4]);
+        reference.child("Friends").child(profileId).setValue(true);
+
+
+        reference2.child("AllConnections").child(userId).setValue(texts[4]);
+        reference2.child("Friends").child(userId).setValue(true);
+    }
+
+    private void cancelSentRequest() {
+        reference2.child("Pending_Request").child(userId).removeValue();
+        reference2.child("AllConnections").child(userId).removeValue();
+
+        reference.child("AllConnections").child(profileId).removeValue();
+
+    }
+
+    private void unFriendAUser() {
+        reference.child("AllConnections").child(profileId).removeValue();
+        reference.child("Friends").child(profileId).removeValue();
+
+        reference2.child("AllConnections").child(userId).removeValue();
+        reference2.child("Friends").child(userId).removeValue();
+    }
+
+    private void sendFriendRequest() {
+        reference.child("AllConnections").child(profileId).setValue("Request Sent");
+
+        reference2.child("AllConnections").child(userId).setValue("Request Pending");
+        reference2.child("Pending_Request").child(userId).setValue(true);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -189,5 +260,11 @@ public class VisitingProfile extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

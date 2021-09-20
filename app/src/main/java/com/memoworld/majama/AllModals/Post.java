@@ -1,6 +1,5 @@
 package com.memoworld.majama.AllModals;
 
-import android.provider.MediaStore;
 
 import com.google.firebase.Timestamp;
 

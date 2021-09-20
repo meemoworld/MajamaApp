@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
 
-        addVirtualData();
+//        addVirtualData();
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
