@@ -89,6 +89,7 @@
             android:layout_marginRight="4dp"
             android:background="@drawable/shape_oval"
             app:srcCompat="@drawable/keyboard_arrow_right"
+            android:onClick="sendMessage"
             app:tint="@color/white" />
 
 
