@@ -150,7 +150,6 @@ public class User extends Fragment {
 
 
     private void initialize(View view) {
-
         userImage = view.findViewById(R.id.user_image_user_fragment);
         userName = view.findViewById(R.id.name_txt_box_user_fragment);
         userAbout = view.findViewById(R.id.about_user_fragment);
@@ -161,7 +160,6 @@ public class User extends Fragment {
         toolbar = view.findViewById(R.id.main_appBar_user);
         uploadButton = view.findViewById(R.id.upload_btn_my_profile);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3, RecyclerView.VERTICAL, false));
-
     }
 
 
