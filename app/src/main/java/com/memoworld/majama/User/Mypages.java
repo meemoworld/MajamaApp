@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +47,7 @@ public class Mypages extends AppCompatActivity {
         userid = auth.getCurrentUser().getUid();
         Log.d(TAG, "onCreate: called ");
         LoadUsers();
-
+        toolbar = findViewById(R.id.main_appBar_myPages);
         toolbar.setTitle("My Pages");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -16,17 +18,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,10 +54,13 @@ public class PageImagePost extends AppCompatActivity {
     private final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("PostImages");
     private final FirebaseFirestore ff = FirebaseFirestore.getInstance();
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final DocumentReference requestReference = FirebaseFirestore.getInstance().collection("Tag").document("postRequestTags");
+
     private ChipGroup chipGroup;
     private AutoCompleteTextView autoCompleteTextView;
     private ArrayAdapter<String> adapter;
-    private List<String> tagsList;
+    private List<String> tagsList, requestTagList;
+    private BottomSheetDialog bottomSheetDialog;
     PagePostTags pagePostTags;
     String pageId, userId, pageImageUrl, pageName;
     StringBuilder tags;
@@ -61,18 +71,28 @@ public class PageImagePost extends AppCompatActivity {
     private static final String TAG = "PageImagePost";
     Long priority = 0L;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page_image_post);
         imageView = findViewById(R.id.upload_image_view);
         autoCompleteTextView = findViewById(R.id.edit_text_search_tag_post_image);
+
+        Toolbar toolbar = findViewById(R.id.app_bar_upload_post);
+        toolbar.inflateMenu(R.menu.request_tags);
+        toolbar.setTitle("Upload Page Post");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+
         Button uploadButton = findViewById(R.id.upload_image_btn);
         FirebaseAuth auth = FirebaseAuth.getInstance();
+
         progressDialog = new ProgressDialog(this);
         pageId = getIntent().getExtras().getString("pageId");
         pageImageUrl = getIntent().getExtras().getString("pageImageUrl");
         pageName = getIntent().getExtras().getString("pageName");
+
         assert auth.getCurrentUser() != null;
         userId = auth.getCurrentUser().getUid();
         tags = new StringBuilder();
@@ -102,7 +122,6 @@ public class PageImagePost extends AppCompatActivity {
                 priority = (Long) dataSnapshot.child("priority").getValue();
             }
         });
-
 
     }
 
@@ -254,5 +273,53 @@ public class PageImagePost extends AppCompatActivity {
         autoCompleteTextView.setText("");
         tagsList.add(tag);
         AddToChipGroup(tag);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.request_tags) {
+            displayDialogue();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void displayDialogue() {
+        requestTagList = new ArrayList<>();
+        bottomSheetDialog = new BottomSheetDialog(this, R.style.BottomSheetTheme);
+        View view = LayoutInflater.from(this).inflate(R.layout.request_tag_bottom_sheet, findViewById(R.id.bottom_sheet));
+
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+        TextInputLayout inputLayout = view.findViewById(R.id.tagInputLayout);
+        view.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChipGroup chipGroup = view.findViewById(R.id.chipGroup);
+                String string = inputLayout.getEditText().getText().toString();
+                if (!string.isEmpty()) {
+                    requestReference.update("tags", FieldValue.arrayUnion(string));
+                    inputLayout.getEditText().setText("");
+                    AddToChipGroupDialogue(string, chipGroup);
+                }
+            }
+        });
+        view.findViewById(R.id.submit_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+    }
+
+    public void AddToChipGroupDialogue(String tag, ChipGroup chipGroup) {
+        Chip chip = new Chip(this);
+        chip.setText(tag);
+        chip.setCheckable(false);
+        chip.setBackgroundColor(getResources().getColor(R.color.lightBlue));
+        chip.setClickable(false);
+        chipGroup.addView(chip);
+        chipGroup.setVisibility(View.VISIBLE);
     }
 }
