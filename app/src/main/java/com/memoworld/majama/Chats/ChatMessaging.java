@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,6 +38,7 @@ public class ChatMessaging extends AppCompatActivity {
     private FirebaseRecyclerAdapter<MessageModel,ChatViewHolder> adapter;
     String userId , profileId;
     RecyclerView recyclerView;
+    Timestamp timestamp;
     EditText message;
     private DatabaseReference reference , reference2;
     private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -54,8 +56,8 @@ public class ChatMessaging extends AppCompatActivity {
         assert FirebaseAuth.getInstance().getCurrentUser() != null;
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        reference = database.getReference().child("UserExtraDetails").child(profileId).child("UserToUserConnection").child("Chats");
-        reference2 = database.getReference().child("UserExtraDetails").child(userId).child("UserToUserConnection").child("Chats");
+        reference = database.getReference().child("UserExtraDetails").child(profileId).child("UserToUserConnection").child("Chats").child(userId);
+        reference2 = database.getReference().child("UserExtraDetails").child(userId).child("UserToUserConnection").child("Chats").child(profileId);
 
         FirebaseRecyclerOptions<MessageModel> options = new FirebaseRecyclerOptions.Builder<MessageModel>().setQuery(reference2,MessageModel.class).build();
         adapter = new FirebaseRecyclerAdapter<MessageModel, ChatViewHolder>(options) {
@@ -124,8 +126,11 @@ public class ChatMessaging extends AppCompatActivity {
         final MessageModel messageModel = new MessageModel("text",Messages,"you",new Date().getTime());
         final MessageModel messageModel2 = new MessageModel("text",Messages,"me",new Date().getTime());
 
-        reference.push().setValue(messageModel);
-        reference2.push().setValue(messageModel2);
+//        reference.push().setValue(messageModel);
+//        reference2.push().setValue(messageModel2);
+
+        reference.child(String.valueOf(timestamp.getSeconds())).setValue(messageModel);
+        reference2.child(String.valueOf(timestamp.getSeconds())).setValue(messageModel2);
 
     }
 

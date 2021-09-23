@@ -59,7 +59,7 @@ public class SampleShowUser extends AppCompatActivity {
         firebaseDatabase.getReference().child("UserExtraDetails").child(profileId).child("UserToUserConnection").child("Friends").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-                userID = snapshot.getKey();
+                String userID = snapshot.getKey();
                 if (userID != null){
                     firebaseDatabase.getReference().child("Users").child(userID).get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
                         @Override
