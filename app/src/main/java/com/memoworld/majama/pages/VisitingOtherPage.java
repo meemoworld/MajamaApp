@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,7 +62,7 @@ public class VisitingOtherPage extends AppCompatActivity {
         pageId = getIntent().getStringExtra("pageId");
         assert auth.getCurrentUser() != null;
         userId = auth.getCurrentUser().getUid();
-
+        toolbar=findViewById(R.id.main_appBar_visitingOtherPage);
         toolbar.setTitle("Page");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
